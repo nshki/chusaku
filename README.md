@@ -1,5 +1,16 @@
 # Chusaku
 
+Add comments above your Rails actions that look like:
+
+```ruby
+# @route GET /waterlilies/:id (waterlily)
+def show
+  # ...
+end
+```
+
+Based on your `routes.rb` file!
+
 
 ## Installation
 
