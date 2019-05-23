@@ -1,3 +1,6 @@
+Layout/IndentationConsistency:
+  EnforcedStyle: rails
+
 Metrics/MethodLength:
   Enabled: false
 
