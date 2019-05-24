@@ -14,7 +14,7 @@ Based on your `routes.rb` file!
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your Rails application's Gemfile:
 
 ```ruby
 gem 'chusaku'
@@ -23,13 +23,16 @@ gem 'chusaku'
 And then execute:
 
 ```
-$ bundle
+$ bundle install
 ```
 
-Or install it yourself as:
+
+## Usage
+
+From the root of your Rails application, run:
 
 ```
-$ gem install chusaku
+$ bundle exec chusaku
 ```
 
 
