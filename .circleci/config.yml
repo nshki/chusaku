@@ -12,6 +12,7 @@ jobs:
             gem install bundler
       - restore_cache:
           keys:
+            - dep-{{ .Branch }}-{{ checksum "chusaku.gemspec" }}
             - dep-{{ .Branch }}
             - dep-
       - run:
@@ -19,7 +20,7 @@ jobs:
           command: |
             bundle install
       - save_cache:
-          key: dep-{{ .Branch }}
+          key: dep-{{ .Branch }}-{{ chucksum "chusaku.gemspec" }}
           paths:
             - vendor/bundle
             - ~/.bundle
