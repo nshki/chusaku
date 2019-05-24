@@ -10,7 +10,7 @@ class ChusakuTest < Minitest::Test
     written_files = File.written_files
 
     assert_equal \
-      written_files[0],
+      written_files['test/mock/app/controllers/api/tacos_controller.rb'],
       <<~HEREDOC
         # frozen_string_literal: true
 
@@ -24,7 +24,7 @@ class ChusakuTest < Minitest::Test
       HEREDOC
 
     assert_equal \
-      written_files[1],
+      written_files['test/mock/app/controllers/waterlilies_controller.rb'],
       <<~HEREDOC
         # frozen_string_literal: true
 
