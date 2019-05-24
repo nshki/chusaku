@@ -73,7 +73,8 @@ class ChusakuTest < Minitest::Test
   def test_create_comment
     actions =
       {
-        'my_method' => { verb: 'GET', path: 'path1', name: 'name1' }
+        'my_method' => { verb: 'GET', path: 'path1', name: 'name1' },
+        'my_other_method' => { verb: 'POST', path: 'path2', name: nil }
       }
 
     # Valid action.
@@ -105,5 +106,10 @@ class ChusakuTest < Minitest::Test
     line = 'def my_method; end'
     result = Chusaku.create_comment(line, actions)
     assert_equal("# @route GET path1 (name1)\ndef my_method; end", result)
+
+    # Action with no prefix.
+    line = 'def my_other_method'
+    result = Chusaku.create_comment(line, actions)
+    assert_equal("# @route POST path2\ndef my_other_method", result)
   end
 end

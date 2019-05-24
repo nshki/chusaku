@@ -85,7 +85,11 @@ module Chusaku
     verb = actions[action][:verb]
     path = actions[action][:path]
     name = actions[action][:name]
-    comment = "#{whitespace}# @route #{verb} #{path} (#{name})\n"
+
+    # Generate comment and account for missing info.
+    comment = "#{whitespace}# @route #{verb} #{path}"
+    comment += " (#{name})" unless name.nil?
+    comment += "\n"
 
     "#{comment}#{line}"
   end
