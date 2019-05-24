@@ -1,5 +1,9 @@
 # Chusaku
 
+| Build |
+|-------|
+|[![CircleCI](https://circleci.com/gh/nshki/chusaku.svg?style=svg)](https://circleci.com/gh/nshki/chusaku)|
+
 Add comments above your Rails actions that look like:
 
 ```ruby
