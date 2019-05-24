@@ -86,13 +86,10 @@ module Chusaku
     path = actions[action][:path]
     name = actions[action][:name]
 
-    # Not all routes have a corresponding prefix.
-    comment =
-      if name.nil?
-        "#{whitespace}# @route #{verb} #{path}\n"
-      else
-        "#{whitespace}# @route #{verb} #{path} (#{name})\n"
-      end
+    # Generate comment and account for missing info.
+    comment = "#{whitespace}# @route #{verb} #{path}"
+    comment += " (#{name})" unless name.nil?
+    comment += "\n"
 
     "#{comment}#{line}"
   end

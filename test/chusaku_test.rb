@@ -74,7 +74,7 @@ class ChusakuTest < Minitest::Test
     actions =
       {
         'my_method' => { verb: 'GET', path: 'path1', name: 'name1' },
-        'my_other_method' => { verb: 'POST', path: 'path2' }
+        'my_other_method' => { verb: 'POST', path: 'path2', name: nil}
       }
 
     # Valid action.
