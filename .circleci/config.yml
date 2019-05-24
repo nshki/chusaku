@@ -12,15 +12,15 @@ jobs:
             gem install bundler
       - restore_cache:
           keys:
-            - dep-{{ .Branch }}-{{ checksum "chusaku.gemspec" }}
-            - dep-{{ .Branch }}
-            - dep-
+            - dep-v1-{{ .Branch }}-{{ checksum "chusaku.gemspec" }}
+            - dep-v1-{{ .Branch }}
+            - dep-v1-
       - run:
           name: Install dependencies
           command: |
             bundle install --path vendor/bundle
       - save_cache:
-          key: dep-{{ .Branch }}-{{ checksum "chusaku.gemspec" }}
+          key: dep-v1-{{ .Branch }}-{{ checksum "chusaku.gemspec" }}
           paths:
             - vendor/bundle
       - run:
