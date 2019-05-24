@@ -10,26 +10,26 @@ class ChusakuTest < Minitest::Test
     written_files = File.written_files
 
     assert_equal \
-      written_files[0],
+      written_files['test/mock/app/controllers/api/tacos_controller.rb'],
       <<~HEREDOC
         # frozen_string_literal: true
 
         class TacosController < ApplicationController
-          # @route POST /api/tacos(.:format) (api_taco)
+          # @route POST /api/tacos (api_taco)
           def create; end
 
-          # @route PUT /api/tacos/:id(.:format) (api_tacos)
+          # @route PUT /api/tacos/:id (api_tacos)
           def update; end
         end
       HEREDOC
 
     assert_equal \
-      written_files[1],
+      written_files['test/mock/app/controllers/waterlilies_controller.rb'],
       <<~HEREDOC
         # frozen_string_literal: true
 
         class WaterliliesController < ApplicationController
-          # @route GET /waterlilies/:id(.:format) (waterlilies)
+          # @route GET /waterlilies/:id (waterlilies)
           def show; end
         end
       HEREDOC
@@ -43,7 +43,7 @@ class ChusakuTest < Minitest::Test
     route1.expect(:defaults, controller: 'controller1', action: 'action1')
     route1.expect(:verb, 'GET')
     route1_path = Minitest::Mock.new
-    route1_path.expect(:spec, 'path1')
+    route1_path.expect(:spec, 'path1(.:format)')
     route1.expect(:path, route1_path)
     route1.expect(:name, 'name1')
     routes.push(route1)
@@ -53,7 +53,7 @@ class ChusakuTest < Minitest::Test
     route2.expect(:defaults, controller: 'controller2', action: 'action2')
     route2.expect(:verb, 'POST')
     route2_path = Minitest::Mock.new
-    route2_path.expect(:spec, 'path2')
+    route2_path.expect(:spec, 'path2(.:format)')
     route2.expect(:path, route2_path)
     route2.expect(:name, 'name2')
     routes.push(route2)

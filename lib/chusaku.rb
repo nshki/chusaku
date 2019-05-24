@@ -30,7 +30,14 @@ module Chusaku
         annotated_lines =
           lines.map { |line| create_comment(line, controller_actions) }
         file.rewind
-        file.write(annotated_lines.join)
+
+        # Write to the file. If we're using an overridden version of File, then
+        # use that method instead for testing purposes.
+        if file.respond_to?(:test_write)
+          file.test_write(annotated_lines.join, path)
+        else
+          file.write(annotated_lines.join)
+        end
 
         puts "Annotated #{controller_key}"
       end
@@ -53,7 +60,7 @@ module Chusaku
       data[defaults[:controller]][action] =
         {
           verb: route.verb,
-          path: route.path.spec.to_s,
+          path: route.path.spec.to_s.gsub('(.:format)', ''),
           name: route.name
         }
     end
