@@ -31,6 +31,7 @@ module Chusaku
           lines.map { |line| create_comment(line, controller_actions) }
         file.rewind
         file.write(annotated_lines.join)
+
         puts "Annotated #{controller_key}"
       end
     end
