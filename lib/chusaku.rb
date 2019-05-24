@@ -78,7 +78,14 @@ module Chusaku
     verb = actions[action][:verb]
     path = actions[action][:path]
     name = actions[action][:name]
-    comment = "#{whitespace}# @route #{verb} #{path} (#{name})\n"
+
+    # Not all routes have a corresponding prefix.
+    comment =
+      if name.nil?
+        "#{whitespace}# @route #{verb} #{path}\n"
+      else
+        "#{whitespace}# @route #{verb} #{path} (#{name})\n"
+      end
 
     "#{comment}#{line}"
   end
