@@ -7,10 +7,10 @@ jobs:
     steps:
       - checkout
       - run:
-        name: install dependencies
-        command: |
-          bundle install
+          name: install dependencies
+          command: |
+            bundle install
       - run:
-        name: run tests
-        command: |
-          bundle exec rake test
+          name: run tests
+          command: |
+            bundle exec rake test
