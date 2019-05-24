@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name = 'chusaku'
   spec.version = Chusaku::VERSION
   spec.authors = ['Nishiki Liu']
-  spec.email = ['nshki@users.noreply.github.com']
+  spec.email = ['nishiki.liu@gmail.com']
 
   spec.summary = 'Annotate your Rails controllers with route info.'
   spec.description = 'Annotate your Rails controllers with route info.'
