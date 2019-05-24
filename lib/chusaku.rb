@@ -67,7 +67,7 @@ module Chusaku
   # @param {Hash} actions
   # @return {String}
   def self.create_comment(line, actions)
-    match = /^(\s*)def\s+(.*)\s*$/.match(line)
+    match = /^(\s*)def\s+(\w*).*$/.match(line)
     return line if match.nil?
 
     whitespace = match[1]

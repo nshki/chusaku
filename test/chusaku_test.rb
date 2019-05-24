@@ -3,8 +3,10 @@
 require 'test_helper'
 
 class ChusakuTest < Minitest::Test
+  def test_annotate
+  end
+
   def test_parse_data
-    # Mock ActionDispatch::Journey::Routes objects.
     routes = []
     path1 = Minitest::Mock.new
     path1.expect(:spec, 'path1')
@@ -65,5 +67,10 @@ class ChusakuTest < Minitest::Test
     line = '	def my_method'
     result = Chusaku.create_comment(line, actions)
     assert_equal("	# @route GET path1 (name1)\n	def my_method", result)
+
+    # Single-line action.
+    line = 'def my_method; end'
+    result = Chusaku.create_comment(line, actions)
+    assert_equal("# @route GET path1 (name1)\ndef my_method; end", result)
   end
 end
