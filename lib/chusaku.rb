@@ -53,7 +53,7 @@ module Chusaku
       data[defaults[:controller]][action] =
         {
           verb: route.verb,
-          path: route.path.spec.to_s,
+          path: route.path.spec.to_s.gsub('(.:format)', ''),
           name: route.name
         }
     end
