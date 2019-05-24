@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Bundler and dependencies
+          name: Install Bundler
           command: |
             gem install bundler
       - restore_cache:
