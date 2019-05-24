@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/chusaku
+    docker:
+      - image: circleci/ruby
+    steps:
+      - checkout
+      - run:
+        name: install dependencies
+        command: |
+          bundle install
+      - run:
+        name: run tests
+        command: |
+          bundle exec rake test
