@@ -46,9 +46,10 @@ module Chusaku
     data = {}
 
     routes.each do |route|
-      action = route.defaults[:action]
-      data[route.defaults[:controller]] ||= {}
-      data[route.defaults[:controller]][action] =
+      defaults = route.defaults
+      action = defaults[:action]
+      data[defaults[:controller]] ||= {}
+      data[defaults[:controller]][action] =
         {
           verb: route.verb,
           path: route.path.spec.to_s,
