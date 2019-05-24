@@ -20,7 +20,7 @@ jobs:
           command: |
             bundle install
       - save_cache:
-          key: dep-{{ .Branch }}-{{ chucksum "chusaku.gemspec" }}
+          key: dep-{{ .Branch }}-{{ checksum "chusaku.gemspec" }}
           paths:
             - vendor/bundle
             - ~/.bundle
