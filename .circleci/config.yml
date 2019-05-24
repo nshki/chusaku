@@ -12,15 +12,15 @@ jobs:
             gem install bundler
       - restore_cache:
           keys:
+            - dep-{{ .Branch }}
             - dep-
       - run:
           name: Install dependencies
           command: |
             bundle install
       - save_cache:
-          key: dep-{{ checksum 'Gemfile.lock' }}
+          key: dep-{{ .Branch }}
           paths:
-            - vendor/bundle
             - ~/.bundle
       - run:
           name: Run tests
