@@ -1,27 +1,60 @@
 # frozen_string_literal: true
 
 require 'test_helper'
+require 'mock/rails'
+require 'mock/file'
 
 class ChusakuTest < Minitest::Test
   def test_annotate
+    Chusaku.annotate
+    written_files = File.written_files
+
+    assert_equal \
+      written_files[0],
+      <<~HEREDOC
+        # frozen_string_literal: true
+
+        class TacosController < ApplicationController
+          # @route POST /api/tacos(.:format) (api_taco)
+          def create; end
+
+          # @route PUT /api/tacos/:id(.:format) (api_tacos)
+          def update; end
+        end
+      HEREDOC
+
+    assert_equal \
+      written_files[1],
+      <<~HEREDOC
+        # frozen_string_literal: true
+
+        class WaterliliesController < ApplicationController
+          # @route GET /waterlilies/:id(.:format) (waterlilies)
+          def show; end
+        end
+      HEREDOC
   end
 
   def test_parse_data
     routes = []
-    path1 = Minitest::Mock.new
-    path1.expect(:spec, 'path1')
-    path2 = Minitest::Mock.new
-    path2.expect(:spec, 'path2')
+
+    # Mock route1.
     route1 = Minitest::Mock.new
     route1.expect(:defaults, controller: 'controller1', action: 'action1')
     route1.expect(:verb, 'GET')
-    route1.expect(:path, path1)
+    route1_path = Minitest::Mock.new
+    route1_path.expect(:spec, 'path1')
+    route1.expect(:path, route1_path)
     route1.expect(:name, 'name1')
     routes.push(route1)
+
+    # Mock route2.
     route2 = Minitest::Mock.new
     route2.expect(:defaults, controller: 'controller2', action: 'action2')
     route2.expect(:verb, 'POST')
-    route2.expect(:path, path2)
+    route2_path = Minitest::Mock.new
+    route2_path.expect(:spec, 'path2')
+    route2.expect(:path, route2_path)
     route2.expect(:name, 'name2')
     routes.push(route2)
 
