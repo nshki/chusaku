@@ -7,10 +7,10 @@ require 'mock/file'
 class ChusakuTest < Minitest::Test
   def test_annotate
     Chusaku.annotate
-    written_files = File.written_files
+    files = File.written_files
+    base_path = 'test/mock/app/controllers'
 
-    assert_equal \
-      written_files['test/mock/app/controllers/api/tacos_controller.rb'],
+    expected =
       <<~HEREDOC
         # frozen_string_literal: true
 
@@ -22,9 +22,9 @@ class ChusakuTest < Minitest::Test
           def update; end
         end
       HEREDOC
+    assert_equal(expected, files["#{base_path}/api/tacos_controller.rb"])
 
-    assert_equal \
-      written_files['test/mock/app/controllers/waterlilies_controller.rb'],
+    expected =
       <<~HEREDOC
         # frozen_string_literal: true
 
@@ -33,6 +33,7 @@ class ChusakuTest < Minitest::Test
           def show; end
         end
       HEREDOC
+    assert_equal(expected, files["#{base_path}/waterlilies_controller.rb"])
   end
 
   def test_parse_data
@@ -60,14 +61,16 @@ class ChusakuTest < Minitest::Test
 
     result = Chusaku.parse_data(routes)
 
-    assert_equal \
-      result,
-      'controller1' => {
-        'action1' => { verb: 'GET', path: 'path1', name: 'name1' }
-      },
-      'controller2' => {
-        'action2' => { verb: 'POST', path: 'path2', name: 'name2' }
+    expected =
+      {
+        'controller1' => {
+          'action1' => { verb: 'GET', path: 'path1', name: 'name1' }
+        },
+        'controller2' => {
+          'action2' => { verb: 'POST', path: 'path2', name: 'name2' }
+        }
       }
+    assert_equal(expected, result)
   end
 
   def test_create_comment
