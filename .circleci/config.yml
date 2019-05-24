@@ -18,12 +18,11 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            bundle install
+            bundle install --path vendor/bundle
       - save_cache:
           key: dep-{{ .Branch }}-{{ checksum "chusaku.gemspec" }}
           paths:
             - vendor/bundle
-            - ~/.bundle
       - run:
           name: Run tests
           command: |
