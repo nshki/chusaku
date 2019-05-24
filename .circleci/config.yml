@@ -10,7 +10,18 @@ jobs:
           name: Install Bundler and dependencies
           command: |
             gem install bundler
+      - restore_cache:
+          keys:
+            - dep-
+      - run:
+          name: Install dependencies
+          command: |
             bundle install
+      - save_cache:
+          key: dep-{{ checksum 'Gemfile.lock' }}
+          paths:
+            - vendor/bundle
+            - ~/.bundle
       - run:
           name: Run tests
           command: |
