@@ -2,7 +2,7 @@
 
 | Build |
 |-------|
-|[![CircleCI](https://circleci.com/gh/nshki/chusaku.svg?style=svg)](https://circleci.com/gh/nshki/chusaku)|
+|[![CircleCI](https://circleci.com/gh/nshki/chusaku/tree/master.svg?style=svg)](https://circleci.com/gh/nshki/chusaku/tree/master)|
 
 Add comments above your Rails actions that look like:
 
