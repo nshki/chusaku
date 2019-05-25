@@ -3,94 +3,81 @@
 require 'chusaku/version'
 
 module Chusaku
-  # The main method to run Chusaku. Annotate all controller files in your Rails
-  # project as follows:
+  # The main method to run Chusaku. Annotate all actions in your Rails project
+  # as follows:
   #
-  #   # @route GET /waterlilies/:id (waterlily)
+  #   # @route GET /waterlilies/:id (waterlilies)
   #   def show
   #     # ...
   #   end
-  def self.annotate
-    routes = Rails.application.routes.routes
-    actions = parse_data(routes)
-    controller_paths = Dir.glob \
-      Rails.root.join('app/controllers/**/*_controller.rb')
-
+  def self.call
     puts 'Chusaku starting...'
+    routes = Chusaku::Routes.call
+    controllers = 'app/controllers/**/*_controller.rb'
 
-    # Loop over all controller files in the Rails project.
-    controller_paths.each do |path|
-      controller_key = /controllers\/(.*)_controller.rb/.match(path)[1]
-      controller_actions = actions[controller_key]
-      next if controller_actions.nil?
+    # Loop over all controller file paths.
+    Dir.glob(Rails.root.join(controllers)).each do |path|
+      controller = /controllers\/(.*)_controller\.rb/.match(path)[1]
+      actions = routes[controller]
+      next if actions.nil?
 
-      # Annotate lines that contain an action definition.
-      File.open(path, 'r+') do |file|
-        lines = file.each_line.to_a
-        annotated_lines =
-          lines.map { |line| create_comment(line, controller_actions) }
-        file.rewind
-
-        # Write to the file. If we're using an overridden version of File, then
-        # use that method instead for testing purposes.
-        if file.respond_to?(:test_write)
-          file.test_write(annotated_lines.join, path)
-        else
-          file.write(annotated_lines.join)
+      # Parse the file and iterate over the parsed content, two entries at a
+      # time.
+      parsed_file = Chusaku::Parser.call(path: path, actions: actions.keys)
+      parsed_file.each_cons(2) do |prev, curr|
+        # Remove all @route comments in the previous group.
+        if prev[:type] == :comment
+          prev[:body] = prev[:body].gsub(/^\s*#\s*@route.*$\n/, '')
         end
 
-        puts "Annotated #{controller_key}"
+        # Only proceed if we are currently looking at an action.
+        next unless curr[:type] == :action
+
+        # Insert annotation comment.
+        action = curr[:action]
+        annotation = annotate(routes[controller][action])
+        whitespace = /^(\s*).*$/.match(curr[:body])[1]
+        comment = "#{whitespace}# #{annotation}\n"
+        curr[:body] = comment + curr[:body]
       end
+
+      # Write to file.
+      parsed_content = parsed_file.map { |pf| pf[:body] }
+      write(path, parsed_content.join)
+      puts "Annotated #{controller}"
     end
 
     puts 'Chusaku finished!'
   end
 
-  # Extract relevant information about a given set of routes.
+  # Write given content to a file. If we're using an overridden version of File,
+  # then use its method instead for testing purposes.
   #
-  # @param {ActionDispatch::Journey::Routes} routes
-  # @return {Hash}
-  def self.parse_data(routes)
-    data = {}
-
-    routes.each do |route|
-      defaults = route.defaults
-      action = defaults[:action]
-      data[defaults[:controller]] ||= {}
-      data[defaults[:controller]][action] =
-        {
-          verb: route.verb,
-          path: route.path.spec.to_s.gsub('(.:format)', ''),
-          name: route.name
-        }
+  # @param {String} path
+  # @param {String} content
+  # @return {void}
+  def self.write(path, content)
+    File.open(path, 'r+') do |file|
+      if file.respond_to?(:test_write)
+        file.test_write(content, path)
+      else
+        file.write(content)
+      end
     end
-
-    data
   end
 
-  # Given a line, return a string that represents what should be written in
-  # place of that line with a route annotation.
+  # Given a hash describing an action, generate an annotation in the form:
   #
-  # @param {String} line
-  # @param {Hash} actions
+  #   @route GET /waterlilies/:id (waterlilies)
+  #
+  # @param {Hash} action_info
   # @return {String}
-  def self.create_comment(line, actions)
-    match = /^(\s*)def\s+(\w*).*$/.match(line)
-    return line if match.nil?
-
-    whitespace = match[1]
-    action = match[2]
-    return line if actions[action].nil?
-
-    verb = actions[action][:verb]
-    path = actions[action][:path]
-    name = actions[action][:name]
-
-    # Generate comment and account for missing info.
-    comment = "#{whitespace}# @route #{verb} #{path}"
-    comment += " (#{name})" unless name.nil?
-    comment += "\n"
-
-    "#{comment}#{line}"
+  def self.annotate(action_info)
+    verb = action_info[:verb]
+    path = action_info[:path]
+    name = action_info[:name]
+    annotation = "@route #{verb} #{path}"
+    annotation += " (#{name})" unless name.nil?
+    annotation
   end
 end
