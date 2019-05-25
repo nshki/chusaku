@@ -15,10 +15,10 @@ class ChusakuTest < Minitest::Test
         # frozen_string_literal: true
 
         class TacosController < ApplicationController
-          # @route POST /api/tacos (api_taco)
+          # @route POST /api/tacos
           def create; end
 
-          # @route PUT /api/tacos/:id (api_tacos)
+          # @route PUT /api/tacos/:id
           def update; end
         end
       HEREDOC
