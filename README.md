@@ -21,7 +21,11 @@ Based on your `routes.rb` file!
 Add this line to your Rails application's Gemfile:
 
 ```ruby
-gem 'chusaku'
+group :development do
+  # ...
+  gem 'chusaku', require: false
+  # ...
+end
 ```
 
 And then execute:
