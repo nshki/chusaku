@@ -5,61 +5,61 @@ require 'test_helper'
 class TypeTest < Minitest::Test
   def test_comment
     line = '# foobar'
-    result = Chusaku::Type.call(line)
+    result = Chusaku::Type.call(line: line, action: 'foobar')
     assert_equal(:comment, result)
   end
 
   def test_comment_with_spaces
     line = '  # foobar  '
-    result = Chusaku::Type.call(line)
+    result = Chusaku::Type.call(line: line, action: 'foobar')
     assert_equal(:comment, result)
   end
 
   def test_comment_with_tabs
     line = '	# foobar	'
-    result = Chusaku::Type.call(line)
+    result = Chusaku::Type.call(line: line, action: 'foobar')
     assert_equal(:comment, result)
   end
 
   def test_comment_with_spaces_and_tabs
     line = '  	# foobar	  '
-    result = Chusaku::Type.call(line)
+    result = Chusaku::Type.call(line: line, action: 'foobar')
     assert_equal(:comment, result)
   end
 
-  def test_method
-    line = 'def method'
-    result = Chusaku::Type.call(line)
-    assert_equal(:def, result)
+  def test_action
+    line = 'def foobar'
+    result = Chusaku::Type.call(line: line, action: 'foobar')
+    assert_equal(:action, result)
   end
 
-  def test_method_with_spaces
-    line = '  def method  '
-    result = Chusaku::Type.call(line)
-    assert_equal(:def, result)
+  def test_action_with_spaces
+    line = '  def foobar  '
+    result = Chusaku::Type.call(line: line, action: 'foobar')
+    assert_equal(:action, result)
   end
 
-  def test_method_with_tabs
-    line = '	def method	'
-    result = Chusaku::Type.call(line)
-    assert_equal(:def, result)
+  def test_action_with_tabs
+    line = '	def foobar	'
+    result = Chusaku::Type.call(line: line, action: 'foobar')
+    assert_equal(:action, result)
   end
 
-  def test_method_with_comment
-    line = 'def method # comment'
-    result = Chusaku::Type.call(line)
-    assert_equal(:def, result)
+  def test_action_with_comment
+    line = 'def foobar # comment'
+    result = Chusaku::Type.call(line: line, action: 'foobar')
+    assert_equal(:action, result)
   end
 
   def test_code
     line = 'puts "hello world!"'
-    result = Chusaku::Type.call(line)
+    result = Chusaku::Type.call(line: line, action: 'foobar')
     assert_equal(:code, result)
   end
 
   def test_code_with_comment
     line = 'puts "hello world!" # hey'
-    result = Chusaku::Type.call(line)
+    result = Chusaku::Type.call(line: line, action: 'foobar')
     assert_equal(:code, result)
   end
 end
