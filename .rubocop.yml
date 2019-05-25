@@ -14,6 +14,9 @@ Metrics/MethodLength:
 Style/ClassVars:
   Enabled: false
 
+Style/CommentedKeyword:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 
