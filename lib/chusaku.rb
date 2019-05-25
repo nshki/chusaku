@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'chusaku/version'
+require 'chusaku/parser'
+require 'chusaku/routes'
 
 module Chusaku
   # The main method to run Chusaku. Annotate all actions in your Rails project
