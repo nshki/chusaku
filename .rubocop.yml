@@ -11,6 +11,9 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Enabled: false
 
+Metrics/PerceivedComplexity:
+  Enabled: false
+
 Style/ClassVars:
   Enabled: false
 
