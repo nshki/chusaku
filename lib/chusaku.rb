@@ -15,29 +15,33 @@ module Chusaku
     routes = Chusaku::Routes.call
     controllers = 'app/controllers/**/*_controller.rb'
 
+    # Loop over all controller file paths.
     Dir.glob(Rails.root.join(controllers)).each do |path|
       controller = /controllers\/(.*)_controller\.rb/.match(path)[1]
       actions = routes[controller]
       next if actions.nil?
 
+      # Parse the file and iterate over the parsed content, two entries at a
+      # time.
       parsed_file = Chusaku::Parser.call(path: path, actions: actions.keys)
       parsed_file.each_cons(2) do |prev, curr|
+        # Remove all @route comments in the previous group.
+        if prev[:type] == :comment
+          prev[:body] = prev[:body].gsub(/^\s*#\s*@route.*$\n/, '')
+        end
+
+        # Only proceed if we are currently looking at an action.
         next unless curr[:type] == :action
 
+        # Insert annotation comment.
         action = curr[:action]
         annotation = annotate(routes[controller][action])
         whitespace = /^(\s*).*$/.match(curr[:body])[1]
         comment = "#{whitespace}# #{annotation}\n"
-
-        if prev[:type] == :comment
-          if prev[:body].include?(annotation)
-          elsif prev[:body].include?('@route')
-          end
-        else
-          prev[:body] += comment
-        end
+        curr[:body] = comment + curr[:body]
       end
 
+      # Write to file.
       parsed_content = parsed_file.map { |pf| pf[:body] }
       write(path, parsed_content.join)
       puts "Annotated #{controller}"

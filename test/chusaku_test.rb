@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require 'mock/rails'
-require 'mock/file'
 
 class ChusakuTest < Minitest::Test
   def test_mock_app
@@ -18,8 +16,22 @@ class ChusakuTest < Minitest::Test
           # @route POST /api/tacos
           def create; end
 
+          # Update all the tacos!
+          # We should not see a duplicate @route in this comment block.
+          # But this should remain (@route), because it's just words.
           # @route PUT /api/tacos/:id
           def update; end
+
+          # This route doesn't exist, so it should be deleted.
+          def destroy
+            puts('Tacos are indestructible')
+          end
+
+          private
+
+            def tacos_params
+              params.require(:tacos).permit(:carnitas)
+            end
         end
       HEREDOC
     assert_equal(expected, files["#{base_path}/api/tacos_controller.rb"])
