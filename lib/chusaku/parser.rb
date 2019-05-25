@@ -8,17 +8,18 @@ module Chusaku
     #
     #   [ { type: :code,    body: 'class Foo\n' },
     #     { type: :comment, body: '  # Bar\n  # Baz\n' },
-    #     { type: :def,     body: '  def method; end\n' }
+    #     { type: :action,  body: '  def action_name; end\n' }
     #     { type: :code,    body: 'end # vanilla is the best flavor\n' } ]
     #
     # @param {String} path
+    # @param {Array<String>} actions
     # @return {Array<Hash>}
-    def self.call(path)
+    def self.call(path:, actions:)
       groups = []
       group = {}
 
       File.open(path, 'r').each_line do |line|
-        type = Chusaku::Type.call(line)
+        type = Chusaku::Type.call(line: line, actions: actions)
 
         if group[:type] != type
           # Now looking at a new group. Push the current group onto the array
