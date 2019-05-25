@@ -51,6 +51,12 @@ class TypeTest < Minitest::Test
     assert_equal(:action, result)
   end
 
+  def test_non_action_method
+    line = 'def carrot'
+    result = Chusaku::Type.call(line: line, actions: %w[foo bar])
+    assert_equal(:code, result)
+  end
+
   def test_code
     line = 'puts "hello world!"'
     result = Chusaku::Type.call(line: line, actions: %w[foo bar])
