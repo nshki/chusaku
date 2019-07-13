@@ -8,11 +8,23 @@ module Chusaku
     #
     #   {
     #     'users' => {
-    #       'edit'   => { verbs: 'GET', path: '/users/:id', name: 'edit_user' },
-    #       'update' => { verbs: 'PUT', path: '/users',     name: nil }
+    #       'edit' => {
+    #         verbs: ['GET'],
+    #         path: '/users/:id',
+    #         name: 'edit_user'
+    #       },
+    #       'update' => {
+    #         verbs: ['PUT', 'PATCH'],
+    #         path: '/users', 
+    #         name: nil
+    #       }
     #     },
     #     'empanadas' => {
-    #       'create' => { verbs: 'POST', path: '/empanadas', name: nil }
+    #       'create' => {
+    #         verbs: ['POST'],
+    #         path: '/empanadas',
+    #         name: nil
+    #       }
     #     }
     #   }
     #
