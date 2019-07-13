@@ -7,7 +7,7 @@
 Add comments above your Rails actions that look like:
 
 ```ruby
-# @route GET /waterlilies/:id (waterlily)
+# @route [GET] /waterlilies/:id (waterlily)
 def show
   # ...
 end

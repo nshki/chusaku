@@ -75,10 +75,10 @@ module Chusaku
   # @param {Hash} action_info
   # @return {String}
   def self.annotate(action_info)
-    verb = action_info[:verb]
+    verbs = action_info[:verbs]
     path = action_info[:path]
     name = action_info[:name]
-    annotation = "@route #{verb} #{path}"
+    annotation = "@route [#{verbs.join(', ')}] #{path}"
     annotation += " (#{name})" unless name.nil?
     annotation
   end

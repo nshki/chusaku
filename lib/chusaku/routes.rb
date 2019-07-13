@@ -8,11 +8,23 @@ module Chusaku
     #
     #   {
     #     'users' => {
-    #       'edit'   => { verb: 'GET', path: '/users/:id', name: 'edit_user' },
-    #       'update' => { verb: 'PUT', path: '/users',     name: nil }
+    #       'edit' => {
+    #         verbs: ['GET'],
+    #         path: '/users/:id',
+    #         name: 'edit_user'
+    #       },
+    #       'update' => {
+    #         verbs: ['PUT', 'PATCH'],
+    #         path: '/users', 
+    #         name: nil
+    #       }
     #     },
     #     'empanadas' => {
-    #       'create' => { verb: 'POST', path: '/empanadas', name: nil }
+    #       'create' => {
+    #         verbs: ['POST'],
+    #         path: '/empanadas',
+    #         name: nil
+    #       }
     #     }
     #   }
     #
@@ -22,18 +34,32 @@ module Chusaku
 
       Rails.application.routes.routes.each do |route|
         defaults = route.defaults
+        controller = defaults[:controller]
         action = defaults[:action]
 
-        routes[defaults[:controller]] ||= {}
-        routes[defaults[:controller]][action] =
-          {
-            verb: route.verb,
-            path: route.path.spec.to_s.gsub('(.:format)', ''),
-            name: route.name
-          }
+        routes[controller] ||= {}
+        if routes[controller][action].nil?
+          routes[controller][action] = format_action(route)
+        else
+          routes[controller][action][:verbs].push(route.verb)
+        end
       end
 
       routes
     end
+
+    private
+
+      # Extract information of a given route.
+      #
+      # @param {ActionDispatch::Journey::Route} route
+      # @return {Hash}
+      def self.format_action(route)
+        {
+          verbs: [route.verb],
+          path: route.path.spec.to_s.gsub('(.:format)', ''),
+          name: route.name
+        }
+      end
   end
 end
