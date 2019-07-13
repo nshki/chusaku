@@ -19,10 +19,13 @@ module Chusaku
     controller_paths = Dir.glob(Rails.root.join(controller_pattern))
 
     # Start progress bar.
-    progressbar = ProgressBar.create(length: controller_paths.length)
+    progressbar = ProgressBar.create \
+      title: 'Chusaku',
+      total: controller_paths.count
 
     # Loop over all controller file paths.
     controller_paths.each do |path|
+      progressbar.increment
       controller = /controllers\/(.*)_controller\.rb/.match(path)[1]
       actions = routes[controller]
       next if actions.nil?
@@ -50,7 +53,6 @@ module Chusaku
       # Write to file.
       parsed_content = parsed_file.map { |pf| pf[:body] }
       write(path, parsed_content.join)
-      progressbar.increment
     end
   end
 
