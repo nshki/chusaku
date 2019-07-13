@@ -8,7 +8,7 @@ module Chusaku
   # The main method to run Chusaku. Annotate all actions in your Rails project
   # as follows:
   #
-  #   # @route GET /waterlilies/:id (waterlilies)
+  #   # @route [GET] /waterlilies/:id (waterlilies)
   #   def show
   #     # ...
   #   end
@@ -70,7 +70,7 @@ module Chusaku
 
   # Given a hash describing an action, generate an annotation in the form:
   #
-  #   @route GET /waterlilies/:id (waterlilies)
+  #   @route [GET] /waterlilies/:id (waterlilies)
   #
   # @param {Hash} action_info
   # @return {String}
