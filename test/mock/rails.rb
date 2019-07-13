@@ -20,7 +20,7 @@ module Rails
     taco_create.expect(:name, nil)
     routes.push(taco_create)
 
-    # Mock tacos#update route.
+    # Mock tacos#update PUT route.
     taco_update = Minitest::Mock.new
     taco_update.expect(:defaults, controller: 'api/tacos', action: 'update')
     taco_update.expect(:verb, 'PUT')
@@ -29,6 +29,16 @@ module Rails
     taco_update.expect(:path, taco_update_path)
     taco_update.expect(:name, nil)
     routes.push(taco_update)
+
+    # Mock tacos#update PATCH route.
+    taco_patch = Minitest::Mock.new
+    taco_patch.expect(:defaults, controller: 'api/tacos', action: 'update')
+    taco_patch.expect(:verb, 'PATCH')
+    taco_patch_path = Minitest::Mock.new
+    taco_patch_path.expect(:spec, '/api/tacos/:id(.:format)')
+    taco_patch.expect(:path, taco_patch_path)
+    taco_patch.expect(:name, nil)
+    routes.push(taco_patch)
 
     # Mock waterlilies#show route.
     wl_show = Minitest::Mock.new

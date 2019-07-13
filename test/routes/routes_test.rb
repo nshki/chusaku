@@ -7,12 +7,20 @@ class RoutesTest < Minitest::Test
     expected =
       {
         'api/tacos' => {
-          'create' => { verb: 'POST', path: '/api/tacos', name: nil },
-          'update' => { verb: 'PUT', path: '/api/tacos/:id', name: nil }
+          'create' => {
+            verbs: %w(POST),
+            path: '/api/tacos',
+            name: nil
+          },
+          'update' => {
+            verbs: %w(PUT PATCH),
+            path: '/api/tacos/:id',
+            name: nil
+          }
         },
         'waterlilies' => {
           'show' => {
-            verb: 'GET',
+            verbs: %w(GET),
             path: '/waterlilies/:id',
             name: 'waterlilies'
           }
