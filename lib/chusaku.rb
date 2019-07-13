@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'ruby-progressbar'
 require 'chusaku/version'
 require 'chusaku/parser'
 require 'chusaku/routes'
@@ -8,17 +9,23 @@ module Chusaku
   # The main method to run Chusaku. Annotate all actions in your Rails project
   # as follows:
   #
-  #   # @route GET /waterlilies/:id (waterlilies)
+  #   # @route [GET] /waterlilies/:id (waterlilies)
   #   def show
   #     # ...
   #   end
   def self.call
-    puts 'Chusaku starting...'
     routes = Chusaku::Routes.call
-    controllers = 'app/controllers/**/*_controller.rb'
+    controller_pattern = 'app/controllers/**/*_controller.rb'
+    controller_paths = Dir.glob(Rails.root.join(controller_pattern))
+
+    # Start progress bar.
+    progressbar = ProgressBar.create \
+      title: 'Chusaku',
+      total: controller_paths.count
 
     # Loop over all controller file paths.
-    Dir.glob(Rails.root.join(controllers)).each do |path|
+    controller_paths.each do |path|
+      progressbar.increment
       controller = /controllers\/(.*)_controller\.rb/.match(path)[1]
       actions = routes[controller]
       next if actions.nil?
@@ -46,10 +53,7 @@ module Chusaku
       # Write to file.
       parsed_content = parsed_file.map { |pf| pf[:body] }
       write(path, parsed_content.join)
-      puts "Annotated #{controller}"
     end
-
-    puts 'Chusaku finished!'
   end
 
   # Write given content to a file. If we're using an overridden version of File,
@@ -70,7 +74,7 @@ module Chusaku
 
   # Given a hash describing an action, generate an annotation in the form:
   #
-  #   @route GET /waterlilies/:id (waterlilies)
+  #   @route [GET] /waterlilies/:id (waterlilies)
   #
   # @param {Hash} action_info
   # @return {String}
