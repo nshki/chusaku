@@ -47,7 +47,7 @@ $ bundle exec chusaku
 ## Development
 
 Read the blog post explaining how the gem works at a high level:
-https://nshki.com/chusaku-a-controller-annotation-gem/
+https://nshki.com/chusaku-a-controller-annotation-gem/.
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run
 `bundle exec rake test` to run the tests. You can also run `bin/console` for an
