@@ -10,19 +10,19 @@ class RoutesTest < Minitest::Test
           'create' => {
             verbs: %w(POST),
             path: '/api/tacos',
-            name: nil
+            name: []
           },
           'update' => {
             verbs: %w(PUT PATCH),
             path: '/api/tacos/:id',
-            name: nil
+            name: []
           }
         },
         'waterlilies' => {
           'show' => {
             verbs: %w(GET),
             path: '/waterlilies/:id',
-            name: 'waterlilies'
+            name: %w(waterlilies waterlilies2)
           }
         }
       }

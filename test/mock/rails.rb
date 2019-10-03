@@ -50,6 +50,16 @@ module Rails
     wl_show.expect(:name, 'waterlilies')
     routes.push(wl_show)
 
+    # Mock a second waterlilies#show route.
+    wl_show = Minitest::Mock.new
+    wl_show.expect(:defaults, controller: 'waterlilies', action: 'show')
+    wl_show.expect(:verb, 'GET')
+    wl_show_path = Minitest::Mock.new
+    wl_show_path.expect(:spec, '/waterlilies/:id(.:format)')
+    wl_show.expect(:path, wl_show_path)
+    wl_show.expect(:name, 'waterlilies2')
+    routes.push(wl_show)
+
     # Mock Rails methods.
     app = Minitest::Mock.new
     app_routes = Minitest::Mock.new

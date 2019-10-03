@@ -41,7 +41,7 @@ class ChusakuTest < Minitest::Test
         # frozen_string_literal: true
 
         class WaterliliesController < ApplicationController
-          # @route [GET] /waterlilies/:id (waterlilies)
+          # @route [GET] /waterlilies/:id (waterlilies, waterlilies2)
           def show; end
         end
       HEREDOC
