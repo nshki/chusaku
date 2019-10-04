@@ -70,24 +70,22 @@ module Chusaku
         }
       end
 
-      # Given a formatted routes object, backfill each action's names by path.
+      # Given a formatted routes object, backfill names by path since Rails
+      # won't necessarily return a path prefix for a route for output nicety's
+      # sake.
+      #
       #
       # @param {Hash} routes
       # @return {Hash}
       def self.backfill_names_by_path(routes)
         paths = {}
 
-        # Populate list of names by path.
         routes.each do |_controller, actions|
           actions.each do |action, data|
             paths[data[:path]] ||= []
             data[:names].each { |name| paths[data[:path]].push(name) }
+            data[:names] = paths[data[:path]]
           end
-        end
-
-        # Backfill.
-        routes.each do |_controller, actions|
-          actions.each { |_action, data| data[:names] = paths[data[:path]] }
         end
       end
   end

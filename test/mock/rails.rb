@@ -27,7 +27,7 @@ module Rails
     taco_index_path = Minitest::Mock.new
     taco_index_path.expect(:spec, '/api/tacos/:id(.:format)')
     taco_index.expect(:path, taco_index_path)
-    taco_index.expect(:name, 'taco')
+    taco_index.expect(:name, nil)
     routes.push(taco_index)
 
     # Mock tacos#update PUT route.
@@ -37,7 +37,7 @@ module Rails
     taco_update_path = Minitest::Mock.new
     taco_update_path.expect(:spec, '/api/tacos/:id(.:format)')
     taco_update.expect(:path, taco_update_path)
-    taco_update.expect(:name, nil)
+    taco_update.expect(:name, 'taco')
     routes.push(taco_update)
 
     # Mock tacos#update PATCH route.
