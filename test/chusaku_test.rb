@@ -13,13 +13,13 @@ class ChusakuTest < Minitest::Test
         # frozen_string_literal: true
 
         class TacosController < ApplicationController
-          # @route [POST] /api/tacos
+          # @route [POST] /api/tacos (tacos)
           def create; end
 
           # Update all the tacos!
           # We should not see a duplicate @route in this comment block.
           # But this should remain (@route), because it's just words.
-          # @route [PUT, PATCH] /api/tacos/:id
+          # @route [PUT, PATCH] /api/tacos/:id (taco)
           def update; end
 
           # This route doesn't exist, so it should be deleted.

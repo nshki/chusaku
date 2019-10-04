@@ -17,7 +17,7 @@ module Rails
     taco_create_path = Minitest::Mock.new
     taco_create_path.expect(:spec, '/api/tacos(.:format)')
     taco_create.expect(:path, taco_create_path)
-    taco_create.expect(:name, nil)
+    taco_create.expect(:name, 'tacos')
     routes.push(taco_create)
 
     # Mock tacos#update PUT route.
@@ -27,7 +27,7 @@ module Rails
     taco_update_path = Minitest::Mock.new
     taco_update_path.expect(:spec, '/api/tacos/:id(.:format)')
     taco_update.expect(:path, taco_update_path)
-    taco_update.expect(:name, nil)
+    taco_update.expect(:name, 'taco')
     routes.push(taco_update)
 
     # Mock tacos#update PATCH route.
@@ -37,7 +37,7 @@ module Rails
     taco_patch_path = Minitest::Mock.new
     taco_patch_path.expect(:spec, '/api/tacos/:id(.:format)')
     taco_patch.expect(:path, taco_patch_path)
-    taco_patch.expect(:name, nil)
+    taco_patch.expect(:name, 'taco')
     routes.push(taco_patch)
 
     # Mock waterlilies#show route.

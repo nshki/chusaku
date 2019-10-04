@@ -81,9 +81,9 @@ module Chusaku
   def self.annotate(action_info)
     verbs = action_info[:verbs]
     path = action_info[:path]
-    name = action_info[:name]
+    names = action_info[:names]
     annotation = "@route [#{verbs.join(', ')}] #{path}"
-    annotation += " (#{name})" unless name.nil?
+    annotation += " (#{names.join(', ')})"
     annotation
   end
 end

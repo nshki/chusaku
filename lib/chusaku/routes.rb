@@ -11,19 +11,19 @@ module Chusaku
     #       'edit' => {
     #         verbs: ['GET'],
     #         path: '/users/:id',
-    #         name: 'edit_user'
+    #         names: ['edit_user']
     #       },
     #       'update' => {
     #         verbs: ['PUT', 'PATCH'],
     #         path: '/users', 
-    #         name: nil
+    #         names: ['edit_user', 'edit_user2']
     #       }
     #     },
     #     'empanadas' => {
     #       'create' => {
     #         verbs: ['POST'],
     #         path: '/empanadas',
-    #         name: nil
+    #         names: []
     #       }
     #     }
     #   }
@@ -41,7 +41,15 @@ module Chusaku
         if routes[controller][action].nil?
           routes[controller][action] = format_action(route)
         else
+          # Add the verb. Ensure the list has no duplicates or `nil` entries.
           routes[controller][action][:verbs].push(route.verb)
+          routes[controller][action][:verbs] =
+            routes[controller][action][:verbs].uniq.compact
+
+          # Add the name. Ensure the list has no duplicates or `nil` entries.
+          routes[controller][action][:names].push(route.name)
+          routes[controller][action][:names] =
+            routes[controller][action][:names].uniq.compact
         end
       end
 
@@ -58,7 +66,7 @@ module Chusaku
         {
           verbs: [route.verb],
           path: route.path.spec.to_s.gsub('(.:format)', ''),
-          name: route.name
+          names: [route.name].compact
         }
       end
   end
