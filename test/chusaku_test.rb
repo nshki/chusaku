@@ -43,6 +43,9 @@ class ChusakuTest < Minitest::Test
         class WaterliliesController < ApplicationController
           # @route [GET] /waterlilies/:id (waterlilies, waterlilies2)
           def show; end
+
+          # @route [GET] /one-off
+          def one_off; end
         end
       HEREDOC
     assert_equal(expected, files["#{base_path}/waterlilies_controller.rb"])

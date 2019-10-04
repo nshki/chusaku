@@ -83,7 +83,7 @@ module Chusaku
     path = action_info[:path]
     names = action_info[:names]
     annotation = "@route [#{verbs.join(', ')}] #{path}"
-    annotation += " (#{names.join(', ')})"
+    annotation += " (#{names.join(', ')})" if names.any?
     annotation
   end
 end

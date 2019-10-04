@@ -70,6 +70,16 @@ module Rails
     wl_show.expect(:name, 'waterlilies2')
     routes.push(wl_show)
 
+    # Mock one-off route with no name.
+    one_off = Minitest::Mock.new
+    one_off.expect(:defaults, controller: 'waterlilies', action: 'one_off')
+    one_off.expect(:verb, 'GET')
+    one_off_path = Minitest::Mock.new
+    one_off_path.expect(:spec, '/one-off')
+    one_off.expect(:path, one_off_path)
+    one_off.expect(:name, nil)
+    routes.push(one_off)
+
     # Mock Rails methods.
     app = Minitest::Mock.new
     app_routes = Minitest::Mock.new

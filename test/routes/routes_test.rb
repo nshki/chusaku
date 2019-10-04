@@ -28,6 +28,11 @@ class RoutesTest < Minitest::Test
             verbs: %w(GET),
             path: '/waterlilies/:id',
             names: %w(waterlilies waterlilies2)
+          },
+          'one_off' => {
+            verbs: %w(GET),
+            path: '/one-off',
+            names: %w()
           }
         }
       }
