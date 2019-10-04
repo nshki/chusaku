@@ -53,7 +53,7 @@ module Chusaku
         end
       end
 
-      routes
+      backfill_names_by_path(routes)
     end
 
     private
@@ -68,6 +68,21 @@ module Chusaku
           path: route.path.spec.to_s.gsub('(.:format)', ''),
           names: [route.name].compact
         }
+      end
+
+      # Given a formatted routes object, backfill paths.
+      #
+      # @param {Hash} routes
+      # @return {Hash}
+      def self.backfill_names_by_path(routes)
+        paths = {}
+        routes.each do |_controller, actions|
+          actions.each do |action, data|
+            paths[data[:path]] ||= []
+            data[:names].each { |name| paths[data[:path]].push(name) }
+            data[:names] = paths[data[:path]]
+          end
+        end
       end
   end
 end
