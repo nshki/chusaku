@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TacosController < ApplicationController
+  def show; end
+
   def create; end
 
   # Update all the tacos!
