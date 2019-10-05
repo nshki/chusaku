@@ -45,7 +45,7 @@ module Chusaku
         # Fetch current action in routes.
         action = curr[:action]
         data = routes[controller][action]
-        next unless routes.any?
+        next unless data.any?
 
         # Add annotations.
         whitespace = /^(\s*).*$/.match(curr[:body])[1]
