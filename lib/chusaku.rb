@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'ruby-progressbar'
 require 'chusaku/version'
 require 'chusaku/parser'
 require 'chusaku/routes'
@@ -18,14 +17,8 @@ module Chusaku
     controller_pattern = 'app/controllers/**/*_controller.rb'
     controller_paths = Dir.glob(Rails.root.join(controller_pattern))
 
-    # Start progress bar.
-    progressbar = ProgressBar.create \
-      title: 'Chusaku',
-      total: controller_paths.count
-
     # Loop over all controller file paths.
     controller_paths.each do |path|
-      progressbar.increment
       controller = /controllers\/(.*)_controller\.rb/.match(path)[1]
       actions = routes[controller]
       next if actions.nil?
@@ -59,6 +52,13 @@ module Chusaku
       # Write to file.
       parsed_content = parsed_file.map { |pf| pf[:body] }
       write(path, parsed_content.join)
+    end
+
+    # Output results to user.
+    if controller_paths.any?
+      puts "Annotated #{controller_paths.join(', ')}"
+    else
+      puts "Nothing to annotate"
     end
   end
 
