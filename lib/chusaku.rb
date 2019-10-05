@@ -9,7 +9,7 @@ module Chusaku
   # The main method to run Chusaku. Annotate all actions in your Rails project
   # as follows:
   #
-  #   # @route [GET] /waterlilies/:id (waterlilies)
+  #   # @route GET /waterlilies/:id (waterlilies)
   #   def show
   #     # ...
   #   end
@@ -42,12 +42,18 @@ module Chusaku
         # Only proceed if we are currently looking at an action.
         next unless curr[:type] == :action
 
-        # Insert annotation comment.
+        # Fetch current action in routes.
         action = curr[:action]
-        annotation = annotate(routes[controller][action])
+        data = routes[controller][action]
+        next unless data.any?
+
+        # Add annotations.
         whitespace = /^(\s*).*$/.match(curr[:body])[1]
-        comment = "#{whitespace}# #{annotation}\n"
-        curr[:body] = comment + curr[:body]
+        data.reverse.each do |datum|
+          annotation = annotate(datum)
+          comment = "#{whitespace}# #{annotation}\n"
+          curr[:body] = comment + curr[:body]
+        end
       end
 
       # Write to file.
@@ -74,15 +80,15 @@ module Chusaku
 
   # Given a hash describing an action, generate an annotation in the form:
   #
-  #   @route [GET] /waterlilies/:id (waterlilies)
+  #   @route GET /waterlilies/:id (waterlilies)
   #
   # @param {Hash} action_info
   # @return {String}
   def self.annotate(action_info)
-    verbs = action_info[:verbs]
+    verb = action_info[:verb]
     path = action_info[:path]
     name = action_info[:name]
-    annotation = "@route [#{verbs.join(', ')}] #{path}"
+    annotation = "@route #{verb} #{path}"
     annotation += " (#{name})" unless name.nil?
     annotation
   end

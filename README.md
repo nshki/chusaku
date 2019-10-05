@@ -7,8 +7,14 @@
 Add comments above your Rails actions that look like:
 
 ```ruby
-# @route [GET] /waterlilies/:id (waterlily)
+# @route GET /waterlilies/:id (waterlily)
 def show
+  # ...
+end
+
+# @route PATCH /waterlilies/:id (waterlily)
+# @route PUT /waterlilies/:id (waterlily)
+def update
   # ...
 end
 ```

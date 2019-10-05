@@ -7,23 +7,21 @@ class RoutesTest < Minitest::Test
     expected =
       {
         'api/tacos' => {
-          'create' => {
-            verbs: %w(POST),
-            path: '/api/tacos',
-            name: nil
-          },
-          'update' => {
-            verbs: %w(PUT PATCH),
-            path: '/api/tacos/:id',
-            name: nil
-          }
+          'show' => [
+            { verb: 'GET', path: '/', name: 'root' },
+            { verb: 'GET', path: '/api/tacos/:id', name: 'taco' }],
+          'create' => [
+            { verb: 'POST', path: '/api/tacos', name: 'tacos' }],
+          'update' => [
+            { verb: 'PUT', path: '/api/tacos/:id', name: 'taco' },
+            { verb: 'PATCH', path: '/api/tacos/:id', name: 'taco' }]
         },
         'waterlilies' => {
-          'show' => {
-            verbs: %w(GET),
-            path: '/waterlilies/:id',
-            name: 'waterlilies'
-          }
+          'show' => [
+            { verb: 'GET', path: '/waterlilies/:id', name: 'waterlilies' },
+            { verb: 'GET', path: '/waterlilies/:id', name: 'waterlilies2' }],
+          'one_off' => [
+            { verb: 'GET', path: '/one-off', name: nil }]
         }
       }
     result = Chusaku::Routes.call
