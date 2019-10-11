@@ -60,7 +60,7 @@ module Chusaku
         paths = {}
 
         routes.each do |_controller, actions|
-          actions.each do |action, data|
+          actions.each do |_action, data|
             data.each do |datum|
               paths[datum[:path]] ||= datum[:name]
               datum[:name] ||= paths[datum[:path]]
