@@ -24,7 +24,9 @@ class RoutesTest < Minitest::Test
             { verb: 'GET', path: '/one-off', name: nil }]
         }
       }
+
     result = Chusaku::Routes.call
+
     assert_equal(expected, result)
   end
 end
