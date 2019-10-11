@@ -9,11 +9,10 @@ module Chusaku
     #   {
     #     'users' => {
     #       'edit' => [
-    #         { verb: ['GET'], path: '/users/:id', name: ['edit_user'] }],
+    #         { verb: 'GET', path: '/users/:id', name: 'edit_user' }],
     #       'update' => [
-    #         { verb: ['PUT', 'PATCH'],
-    #           path: '/users', 
-    #           name: ['edit_user', 'edit_user2'] }]
+    #         { verb: 'PATCH', path: '/users', name: 'edit_user' },
+    #         { verb: 'PUT', path: '/users', name: 'edit_user' }]
     #     },
     #     'empanadas' => {
     #       'create' => [
