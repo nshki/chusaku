@@ -12,6 +12,8 @@ module Chusaku
   #   def show
   #     # ...
   #   end
+  #
+  # @return {void}
   def self.call
     routes = Chusaku::Routes.call
     controller_pattern = 'app/controllers/**/*_controller.rb'
@@ -65,8 +67,8 @@ module Chusaku
   # Write given content to a file. If we're using an overridden version of File,
   # then use its method instead for testing purposes.
   #
-  # @param {String} path
-  # @param {String} content
+  # @param {String} path - File path to write to
+  # @param {String} content - Contents of the file
   # @return {void}
   def self.write(path, content)
     File.open(path, 'r+') do |file|
@@ -82,8 +84,8 @@ module Chusaku
   #
   #   @route GET /waterlilies/:id (waterlilies)
   #
-  # @param {Hash} action_info
-  # @return {String}
+  # @param {Hash} action_info - Parsed line given by Chusaku::Parser
+  # @return {String} Annotation for given parsed line
   def self.annotate(action_info)
     verb = action_info[:verb]
     path = action_info[:path]

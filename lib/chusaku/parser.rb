@@ -19,9 +19,9 @@ module Chusaku
     #       body: 'end # vanilla is the best flavor\n',
     #       action: nil } ]
     #
-    # @param {String} path
-    # @param {Array<String>} actions
-    # @return {Array<Hash>}
+    # @param {String} path - File path to parse
+    # @param {Array<String>} actions - List of valid actions for this route
+    # @return {Array<Hash>} Parsed groups of the file
     def self.call(path:, actions:)
       groups = []
       group = {}
@@ -56,9 +56,9 @@ module Chusaku
     #
     #   { type: :action, body: 'def foo', action: 'foo' }
     #
-    # @param {String} line
-    # @param {Array<String>} actions
-    # @return {Hash}
+    # @param {String} line - A line of a file
+    # @param {Array<String>} actions - List of valid actions for this route
+    # @return {Hash} Parsed line
     def self.parse_line(line:, actions:)
       comment_match = /^\s*#.*$/.match(line)
       def_match = /^\s*def\s+(\w*)\s*\w*.*$/.match(line)
