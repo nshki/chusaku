@@ -8,7 +8,7 @@ class TacosController < ApplicationController
   # Update all the tacos!
   # @route this should be deleted, it's not a valid route.
   # We should not see a duplicate @route in this comment block.
-  # @route PUT /api/tacos/:id
+  # @route PUT /api/tacos/:id (taco)
   # But this should remain (@route), because it's just words.
   def update; end
 
