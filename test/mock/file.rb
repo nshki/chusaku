@@ -18,7 +18,7 @@ class File
   # @return {Array<String>} List of files and their contents
   def self.written_files
     written_files = @@written_files
-    @@written_files = []
+    @@written_files = {}
     written_files
   end
 end

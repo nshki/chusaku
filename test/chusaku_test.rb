@@ -3,8 +3,25 @@
 require 'test_helper'
 
 class ChusakuTest < Minitest::Test
+  def test_dry_run_flag
+    capture_io do
+      Chusaku.call('--dry-run')
+    end
+    assert_empty File.written_files
+  end
+
+  def test_exit_with_error_on_annotation_flag
+    assert_empty File.written_files
+    capture_io do
+      assert_equal 1, Chusaku.call('--exit-with-error-on-annotation')
+    end
+    assert_equal 2, File.written_files.size
+  end
+
   def test_mock_app
-    Chusaku.call
+    capture_io do
+      Chusaku.call
+    end
     files = File.written_files
     base_path = 'test/mock/app/controllers'
 

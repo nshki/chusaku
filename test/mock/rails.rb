@@ -12,6 +12,13 @@ module Rails
 
     routes.push \
       mock_route \
+        controller: 'api/burritos',
+        action: 'create',
+        verb: 'POST',
+        path: '/api/burritos(.:format)',
+        name: 'burritos'
+    routes.push \
+      mock_route \
         controller: 'api/tacos',
         action: 'show',
         verb: 'GET',

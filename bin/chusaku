@@ -19,4 +19,4 @@ rescue StandardError
 end
 
 require 'chusaku'
-Chusaku.call
+exit Chusaku.call(ARGV)

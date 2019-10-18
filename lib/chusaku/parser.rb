@@ -21,12 +21,13 @@ module Chusaku
     #
     # @param {String} path - File path to parse
     # @param {Array<String>} actions - List of valid actions for this route
-    # @return {Array<Hash>} Parsed groups of the file
+    # @return {Hash} Parsed groups of the file
     def self.call(path:, actions:)
       groups = []
       group = {}
+      content = IO.read(path)
 
-      File.open(path, 'r').each_line do |line|
+      content.each_line do |line|
         parsed_line = parse_line(line: line, actions: actions)
 
         if group[:type] != parsed_line[:type]
@@ -42,7 +43,10 @@ module Chusaku
 
       # Push the last group onto the array and return.
       groups.push(group)
-      groups
+      {
+        content: content,
+        groups: groups
+      }
     end
 
     # Given a line and actions, returns the line's type:

@@ -13,11 +13,13 @@ module Chusaku
   #     # ...
   #   end
   #
-  # @return {void}
-  def self.call
+  # @param {Array<String>} args - List cli flags
+  # @return {Integer}
+  def self.call(args = [])
     routes = Chusaku::Routes.call
     controller_pattern = 'app/controllers/**/*_controller.rb'
     controller_paths = Dir.glob(Rails.root.join(controller_pattern))
+    annotated_paths = []
 
     # Loop over all controller file paths.
     controller_paths.each do |path|
@@ -28,7 +30,7 @@ module Chusaku
       # Parse the file and iterate over the parsed content, two entries at a
       # time.
       parsed_file = Chusaku::Parser.call(path: path, actions: actions.keys)
-      parsed_file.each_cons(2) do |prev, curr|
+      parsed_file[:groups].each_cons(2) do |prev, curr|
         # Remove all @route comments in the previous group.
         if prev[:type] == :comment
           prev[:body] = prev[:body].gsub(/^\s*#\s*@route.*$\n/, '')
@@ -52,15 +54,25 @@ module Chusaku
       end
 
       # Write to file.
-      parsed_content = parsed_file.map { |pf| pf[:body] }
-      write(path, parsed_content.join)
+      parsed_content = parsed_file[:groups].map { |pf| pf[:body] }
+      new_content = parsed_content.join
+      if parsed_file[:content] != new_content
+        write(path, new_content) unless args.include?('--dry-run')
+        annotated_paths << path
+      end
     end
 
     # Output results to user.
-    if controller_paths.any?
-      puts "Annotated #{controller_paths.join(', ')}"
+    if annotated_paths.any?
+      puts "Annotated #{annotated_paths.join(', ')}"
+      if args.include?('--exit-with-error-on-annotation')
+        1
+      else
+        0
+      end
     else
       puts "Nothing to annotate"
+      0
     end
   end
 
