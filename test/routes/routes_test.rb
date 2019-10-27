@@ -6,6 +6,11 @@ class RoutesTest < Minitest::Test
   def test_mock_rails
     expected =
       {
+        'api/burritos' => {
+          'create' => [
+            { verb: 'POST', path: '/api/burritos', name: 'burritos' }
+          ]
+        },
         'api/tacos' => {
           'show' => [
             { verb: 'GET', path: '/', name: 'root' },

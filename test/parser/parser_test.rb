@@ -8,16 +8,16 @@ class ParserTest < Minitest::Test
       path: "#{__dir__}/examples/example.rb",
       actions: %w[foo]
 
-    assert_equal(5, result.size)
+    assert_equal(5, result[:groups].size)
     assert_equal \
       %i[comment code comment action code],
-      (result.map { |r| r[:type] })
+      (result[:groups].map { |r| r[:type] })
     assert_equal \
-      result.map { |r| r[:body] }.join,
+      result[:groups].map { |r| r[:body] }.join,
       File.read("#{__dir__}/examples/example.rb")
     assert_equal \
       [nil, nil, nil, 'foo', nil],
-      (result.map { |r| r[:action] })
+      (result[:groups].map { |r| r[:action] })
   end
 
   def test_empty_file
@@ -25,7 +25,7 @@ class ParserTest < Minitest::Test
       path: "#{__dir__}/examples/empty.rb",
       actions: []
 
-    assert_equal([{}], result)
+    assert_equal([{}], result[:groups])
   end
 
   def test_comment
