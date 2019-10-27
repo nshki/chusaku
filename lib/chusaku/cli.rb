@@ -40,6 +40,7 @@ module Chusaku
       # Raises exception if Rails project cannot be detected.
       #
       # @raise {Chusaku::CLI::NotARailsProject} Exception if not Rails project
+      # @return {void}
       def check_for_rails_project
         unless File.directory?('./app/controllers') && File.exist?('./Rakefile')
           raise NotARailsProject
