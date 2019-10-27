@@ -4,10 +4,13 @@ require 'test_helper'
 
 class Chusaku::CLITest < Minitest::Test
   def test_help_flag
+    # -h
     out, _ = capture_io do
       assert_equal(0, Chusaku::CLI.new.call(['-h']))
     end
     assert_match(/Show this help message and quit/, out)
+
+    # --help
     out, _ = capture_io do
       assert_equal(0, Chusaku::CLI.new.call(['--help']))
     end
@@ -22,12 +25,14 @@ class Chusaku::CLITest < Minitest::Test
   end
 
   def test_exit_flag_precedence
+    # Passing -v before -h executes -v and exits.
     out, _ = capture_io do
       assert_equal(0, Chusaku::CLI.new.call(['-v', '-h']))
     end
     assert_match(/\d+\.\d+\.\d+/, out)
     refute_match(/Show this help message and quit/, out)
 
+    # Passing -h before -v executes -h and exits.
     out, _ = capture_io do
       assert_equal(0, Chusaku::CLI.new.call(['-h', '-v']))
     end
