@@ -21,7 +21,7 @@ module Chusaku
     #
     # @param {String} path - File path to parse
     # @param {Array<String>} actions - List of valid actions for this route
-    # @return {Hash} Parsed groups of the file
+    # @return {Hash} Parsed groups of the file and original content
     def self.call(path:, actions:)
       groups = []
       group = {}

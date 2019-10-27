@@ -1,9 +1,5 @@
 #!/usr/bin/env ruby
 
-unless File.directory?('./app/controllers') && File.exist?('./Rakefile')
-  abort 'Please run chusaku from the root of your project.'
-end
-
 require 'rubygems'
 
 begin
@@ -18,5 +14,6 @@ begin
 rescue StandardError
 end
 
-require 'chusaku'
-exit Chusaku.call(ARGV)
+require 'chusaku/cli'
+
+exit Chusaku::CLI.new.call

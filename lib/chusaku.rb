@@ -13,8 +13,8 @@ module Chusaku
   #     # ...
   #   end
   #
-  # @param {Array<String>} args - List cli flags
-  # @return {Integer}
+  # @param {Array<String>} args - CLI flags
+  # @return {Integer} 0 on success, 1 on error
   def self.call(args = [])
     routes = Chusaku::Routes.call
     controller_pattern = 'app/controllers/**/*_controller.rb'
@@ -57,7 +57,7 @@ module Chusaku
       parsed_content = parsed_file[:groups].map { |pf| pf[:body] }
       new_content = parsed_content.join
       if parsed_file[:content] != new_content
-        write(path, new_content) unless args.include?('--dry-run')
+        write(path, new_content) unless args.include?(:dry)
         annotated_paths << path
       end
     end
@@ -65,7 +65,7 @@ module Chusaku
     # Output results to user.
     if annotated_paths.any?
       puts "Annotated #{annotated_paths.join(', ')}"
-      if args.include?('--exit-with-error-on-annotation')
+      if args.include?(:error_on_annotation)
         1
       else
         0

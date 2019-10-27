@@ -4,26 +4,25 @@ require 'test_helper'
 
 class ChusakuTest < Minitest::Test
   def test_dry_run_flag
-    capture_io do
-      Chusaku.call('--dry-run')
-    end
-    assert_empty File.written_files
+    File.reset_mock
+    capture_io { Chusaku.call([:dry]) }
+    assert_empty(File.written_files)
   end
 
   def test_exit_with_error_on_annotation_flag
-    assert_empty File.written_files
+    assert_empty(File.written_files)
     capture_io do
-      assert_equal 1, Chusaku.call('--exit-with-error-on-annotation')
+      assert_equal(1, Chusaku.call([:error_on_annotation]))
     end
-    assert_equal 2, File.written_files.size
+    assert_equal(2, File.written_files.size)
   end
 
   def test_mock_app
-    capture_io do
-      Chusaku.call
-    end
+    capture_io { Chusaku.call }
     files = File.written_files
     base_path = 'test/mock/app/controllers'
+
+    refute_includes(files, "#{base_path}/api/burritos_controller.rb")
 
     expected =
       <<~HEREDOC
