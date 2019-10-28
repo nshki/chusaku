@@ -61,8 +61,18 @@ Usage: chusaku [options]
     -h, --help                       Show this help message and quit
 ```
 
-If you'd like to use Chusaku as a Git hook, take a look at
-[Lefthook](https://github.com/Arkweid/lefthook).
+
+## Pre-commit Hook
+
+Here's an example setup that you could use for automating Chusaku as a Git hook
+with the [Lefthook](https://github.com/Arkweid/lefthook) gem.
+
+```yaml
+pre-commit:
+  commands:
+    chusaku:
+      run: bundle exec chusaku --exit-with-error-on-annotation
+```
 
 
 ## Development
