@@ -71,8 +71,10 @@ with the [Lefthook](https://github.com/Arkweid/lefthook) gem.
 pre-commit:
   commands:
     chusaku:
-      run: bundle exec chusaku --exit-with-error-on-annotation
+      run: eval "! git diff --staged --name-only | grep -q 'routes.rb' && exit 0 || bundle exec chusaku --exit-with-error-on-annotation"
 ```
+
+This example config only runs Chusaku if `routes.rb` was modified.
 
 
 ## Development
