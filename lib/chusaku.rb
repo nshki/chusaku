@@ -4,6 +4,7 @@ require 'chusaku/version'
 require 'chusaku/parser'
 require 'chusaku/routes'
 
+# Handles core functionality of annotating projects.
 module Chusaku
   # The main method to run Chusaku. Annotate all actions in your Rails project
   # as follows:
@@ -23,7 +24,7 @@ module Chusaku
 
     # Loop over all controller file paths.
     controller_paths.each do |path|
-      controller = /controllers\/(.*)_controller\.rb/.match(path)[1]
+      controller = %r{controllers\/(.*)_controller\.rb}.match(path)[1]
       actions = routes[controller]
       next if actions.nil?
 
@@ -46,7 +47,7 @@ module Chusaku
 
         # Add annotations.
         whitespace = /^(\s*).*$/.match(curr[:body])[1]
-        data.reverse.each do |datum|
+        data.reverse_each do |datum|
           annotation = annotate(datum)
           comment = "#{whitespace}# #{annotation}\n"
           curr[:body] = comment + curr[:body]
@@ -71,7 +72,7 @@ module Chusaku
         0
       end
     else
-      puts "Nothing to annotate"
+      puts 'Nothing to annotate'
       0
     end
   end

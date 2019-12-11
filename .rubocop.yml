@@ -4,3 +4,16 @@ require:
 AllCops:
   Exclude:
     - 'bin/**/*'
+    - 'test/mock/**/*'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'test/**/*'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'test/**/*'
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'test/**/*'

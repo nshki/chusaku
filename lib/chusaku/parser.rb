@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module Chusaku
+  # Handles parsing a file and groups its lines into categories.
   module Parser
-    # Parses a file and groups its lines into categories:
-    #
     # Example output:
     #
     #   [ { type: :code,

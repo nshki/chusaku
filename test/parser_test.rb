@@ -5,7 +5,7 @@ require 'test_helper'
 class ParserTest < Minitest::Test
   def test_example_file
     result = Chusaku::Parser.call \
-      path: "#{__dir__}/examples/example.rb",
+      path: "#{__dir__}/mock/examples/example.rb",
       actions: %w[foo]
 
     assert_equal(5, result[:groups].size)
@@ -14,7 +14,7 @@ class ParserTest < Minitest::Test
       (result[:groups].map { |r| r[:type] })
     assert_equal \
       result[:groups].map { |r| r[:body] }.join,
-      File.read("#{__dir__}/examples/example.rb")
+      File.read("#{__dir__}/mock/examples/example.rb")
     assert_equal \
       [nil, nil, nil, 'foo', nil],
       (result[:groups].map { |r| r[:action] })
@@ -22,7 +22,7 @@ class ParserTest < Minitest::Test
 
   def test_empty_file
     result = Chusaku::Parser.call \
-      path: "#{__dir__}/examples/empty.rb",
+      path: "#{__dir__}/mock/examples/empty.rb",
       actions: []
 
     assert_equal([{}], result[:groups])
