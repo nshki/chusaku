@@ -1,27 +1,6 @@
+require:
+  - rubocop-performance
+
 AllCops:
   Exclude:
     - 'bin/**/*'
-
-Layout/IndentationConsistency:
-  EnforcedStyle: rails
-
-Metrics/AbcSize:
-  Enabled: false
-
-Metrics/MethodLength:
-  Enabled: false
-
-Metrics/PerceivedComplexity:
-  Enabled: false
-
-Style/ClassVars:
-  Enabled: false
-
-Style/CommentedKeyword:
-  Enabled: false
-
-Style/Documentation:
-  Enabled: false
-
-Style/RegexpLiteral:
-  Enabled: false
