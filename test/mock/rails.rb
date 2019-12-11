@@ -90,16 +90,14 @@ module Rails
     rails_root
   end
 
-  private
-
-    def self.mock_route(controller:, action:, verb:, path:, name:)
-      route = Minitest::Mock.new
-      route.expect(:defaults, controller: controller, action: action)
-      route.expect(:verb, verb)
-      route_path = Minitest::Mock.new
-      route_path.expect(:spec, path)
-      route.expect(:path, route_path)
-      route.expect(:name, name)
-      route
-    end
+  def self.mock_route(controller:, action:, verb:, path:, name:)
+    route = Minitest::Mock.new
+    route.expect(:defaults, controller: controller, action: action)
+    route.expect(:verb, verb)
+    route_path = Minitest::Mock.new
+    route_path.expect(:spec, path)
+    route.expect(:path, route_path)
+    route.expect(:name, name)
+    route
+  end
 end

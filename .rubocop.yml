@@ -4,7 +4,8 @@ require:
 AllCops:
   Exclude:
     - 'bin/**/*'
-    - 'test/mock/**/*'
+    - 'test/mock/app/**/*'
+    - 'test/mock/examples/**/*'
 
 Metrics/AbcSize:
   Exclude:

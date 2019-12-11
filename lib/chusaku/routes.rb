@@ -24,10 +24,7 @@ module Chusaku
       routes = {}
 
       Rails.application.routes.routes.each do |route|
-        defaults = route.defaults
-        controller = defaults[:controller]
-        action = defaults[:action]
-
+        controller, action = extract_controller_and_action_from(route)
         routes[controller] ||= {}
         routes[controller][action] ||= []
         routes[controller][action].push(format_route(route))
@@ -66,6 +63,18 @@ module Chusaku
       end
 
       routes
+    end
+
+    # Given a route, extract the controller and action strings.
+    #
+    # @param {ActionDispatch::Journey::Route} route - Route instance
+    # @return {Array<String>} - [String, String]
+    def self.extract_controller_and_action_from(route)
+      defaults = route.defaults
+      controller = defaults[:controller]
+      action = defaults[:action]
+
+      [controller, action]
     end
   end
 end

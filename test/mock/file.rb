@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Style/ClassVars
 class File
   @@written_files = {}
 
@@ -29,3 +30,4 @@ class File
     @@written_files = {}
   end
 end
+# rubocop:enable Style/ClassVars
