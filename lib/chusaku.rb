@@ -31,9 +31,11 @@ module Chusaku
       # time.
       parsed_file = Chusaku::Parser.call(path: path, actions: actions.keys)
       parsed_file[:groups].each_cons(2) do |prev, curr|
-        # Remove all @route comments in the previous group.
+        # Remove all @route and scaffolded annotations in the previous group.
         if prev[:type] == :comment
           prev[:body] = prev[:body].gsub(/^\s*#\s*@route.*$\n/, '')
+          prev[:body] =
+            prev[:body].gsub(/^\s*# (GET|POST|PATCH\/PUT|DELETE) \/\S+$\n/, '')
         end
 
         # Only proceed if we are currently looking at an action.
