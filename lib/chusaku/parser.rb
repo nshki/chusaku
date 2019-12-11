@@ -24,9 +24,8 @@ module Chusaku
     def self.call(path:, actions:)
       groups = []
       group = {}
-      content = IO.read(path)
 
-      content.each_line do |line|
+      IO.read(path).each_line do |line|
         parsed_line = parse_line(line: line, actions: actions)
 
         if group[:type] != parsed_line[:type]
@@ -42,10 +41,7 @@ module Chusaku
 
       # Push the last group onto the array and return.
       groups.push(group)
-      {
-        content: content,
-        groups: groups
-      }
+      { content: content, groups: groups }
     end
 
     # Given a line and actions, returns the line's type:
