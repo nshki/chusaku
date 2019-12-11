@@ -54,38 +54,66 @@ module Chusaku
     def optparser
       OptionParser.new do |opts|
         opts.banner = 'Usage: chusaku [options]'
+        add_error_on_annotation_flag(opts)
+        add_dry_run_flag(opts)
+        add_version_flag(opts)
+        add_help_flag(opts)
+      end
+    end
 
-        opts.on(
-          '--exit-with-error-on-annotation',
-          'Fail if any file was annotated'
-        ) do
-          @options[:error_on_annotation] = true
-        end
+    # Adds `--exit-with-error-on-annotation` flag.
+    #
+    # @param {OptionParser} opts - OptionParser instance
+    # @return {void}
+    def add_error_on_annotation_flag(opts)
+      opts.on(
+        '--exit-with-error-on-annotation',
+        'Fail if any file was annotated'
+      ) do
+        @options[:error_on_annotation] = true
+      end
+    end
 
-        opts.on(
-          '--dry-run',
-          'Run without file modifications'
-        ) do
-          @options[:dry] = true
-        end
+    # Adds `--dry-run` flag.
+    #
+    # @param {OptionParser} opts - OptionParser instance
+    # @return {void}
+    def add_dry_run_flag(opts)
+      opts.on(
+        '--dry-run',
+        'Run without file modifications'
+      ) do
+        @options[:dry] = true
+      end
+    end
 
-        opts.on(
-          '-v',
-          '--version',
-          'Show Chusaku version number and quit'
-        ) do
-          puts(Chusaku::VERSION)
-          raise Finished
-        end
+    # Adds `--version` flag.
+    #
+    # @param {OptionParser} opts - OptionParser instance
+    # @return {void}
+    def add_version_flag(opts)
+      opts.on(
+        '-v',
+        '--version',
+        'Show Chusaku version number and quit'
+      ) do
+        puts(Chusaku::VERSION)
+        raise Finished
+      end
+    end
 
-        opts.on(
-          '-h',
-          '--help',
-          'Show this help message and quit'
-        ) do
-          puts(opts)
-          raise Finished
-        end
+    # Adds `--help` flag.
+    #
+    # @param {OptionParser} opts - OptionParser instance
+    # @return {void}
+    def add_help_flag(opts)
+      opts.on(
+        '-h',
+        '--help',
+        'Show this help message and quit'
+      ) do
+        puts(opts)
+        raise Finished
       end
     end
   end
