@@ -24,8 +24,9 @@ module Chusaku
     def self.call(path:, actions:)
       groups = []
       group = {}
+      content = IO.read(path)
 
-      IO.read(path).each_line do |line|
+      content.each_line do |line|
         parsed_line = parse_line(line: line, actions: actions)
 
         if group[:type] != parsed_line[:type]

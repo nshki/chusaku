@@ -6,105 +6,119 @@ require 'chusaku/routes'
 
 # Handles core functionality of annotating projects.
 module Chusaku
-  # The main method to run Chusaku. Annotate all actions in your Rails project
-  # as follows:
-  #
-  #   # @route GET /waterlilies/:id (waterlilies)
-  #   def show
-  #     # ...
-  #   end
-  #
-  # @param {Array<String>} args - CLI flags
-  # @return {Integer} 0 on success, 1 on error
-  def self.call(args = [])
-    routes = Chusaku::Routes.call
-    controller_pattern = 'app/controllers/**/*_controller.rb'
-    controller_paths = Dir.glob(Rails.root.join(controller_pattern))
-    annotated_paths = []
+  class << self
+    # The main method to run Chusaku. Annotate all actions in a Rails project as
+    # follows:
+    #
+    #   # @route GET /waterlilies/:id (waterlilies)
+    #   def show
+    #     # ...
+    #   end
+    #
+    # @param {Hash} flags - CLI flags
+    # @return {Integer} - 0 on success, 1 on error
+    def call(flags = {})
+      @flags = flags
+      @routes = Chusaku::Routes.call
+      @annotated_paths = []
+      controllers_pattern = 'app/controllers/**/*_controller.rb'
 
-    # Loop over all controller file paths.
-    controller_paths.each do |path|
-      controller = %r{controllers\/(.*)_controller\.rb}.match(path)[1]
-      actions = routes[controller]
-      next if actions.nil?
+      Dir.glob(Rails.root.join(controllers_pattern)).each do |path|
+        controller = %r{controllers\/(.*)_controller\.rb}.match(path)[1]
+        actions = @routes[controller]
+        next if actions.nil?
 
-      # Parse the file and iterate over the parsed content, two entries at a
-      # time.
-      parsed_file = Chusaku::Parser.call(path: path, actions: actions.keys)
+        annotate_file(path: path, controller: controller, actions: actions.keys)
+      end
+
+      output_results
+    end
+
+    private
+
+    # Adds annotations to the given file.
+    #
+    # @param {String} path - Path to file
+    # @param {String} controller - Controller name
+    # @param {Array<String>} actions - List of valid actions for the controller
+    # @return {void}
+    def annotate_file(path:, controller:, actions:)
+      parsed_file = Chusaku::Parser.call(path: path, actions: actions)
       parsed_file[:groups].each_cons(2) do |prev, curr|
-        # Remove all @route comments in the previous group.
-        if prev[:type] == :comment
-          prev[:body] = prev[:body].gsub(/^\s*#\s*@route.*$\n/, '')
-        end
-
-        # Only proceed if we are currently looking at an action.
+        clean_group(prev)
         next unless curr[:type] == :action
 
-        # Fetch current action in routes.
-        action = curr[:action]
-        data = routes[controller][action]
-        next unless data.any?
+        route_data = @routes[controller][curr[:action]]
+        next unless route_data.any?
 
-        # Add annotations.
-        whitespace = /^(\s*).*$/.match(curr[:body])[1]
-        data.reverse_each do |datum|
-          annotation = annotate(datum)
-          comment = "#{whitespace}# #{annotation}\n"
-          curr[:body] = comment + curr[:body]
+        annotate_group(group: curr, route_data: route_data)
+      end
+
+      write_to_file(path: path, parsed_file: parsed_file)
+    end
+
+    # Given a parsed group, clean out its contents.
+    #
+    # @param {Hash} group - { type: Symbol, body: String }
+    # @return {void}
+    def clean_group(group)
+      return unless group[:type] == :comment
+
+      group[:body] = group[:body].gsub(/^\s*#\s*@route.*$\n/, '')
+    end
+
+    # Add an annotation to the given group given by Chusaku::Parser that looks
+    # like:
+    #
+    #   @route GET /waterlilies/:id (waterlilies)
+    #
+    # @param {Hash} group - Parsed content given by Chusaku::Parser
+    # @param {Hash} route_data - Individual route data given by Chusaku::Routes
+    # @return {void}
+    def annotate_group(group:, route_data:)
+      whitespace = /^(\s*).*$/.match(group[:body])[1]
+      route_data.reverse_each do |datum|
+        name = datum[:name]
+        annotation = "@route #{datum[:verb]} #{datum[:path]}"
+        annotation += " (#{name})" unless name.nil?
+        comment = "#{whitespace}# #{annotation}\n"
+        group[:body] = comment + group[:body]
+      end
+    end
+
+    # Write annotated content to a file if it differs from the original.
+    #
+    # @param {String} path - File path to write to
+    # @param {Hash} parsed_file - Hash mutated by `annotate_group`
+    # @return {void}
+    def write_to_file(path:, parsed_file:)
+      content = parsed_file[:groups].map { |pf| pf[:body] }.join
+      return unless parsed_file[:content] != content
+
+      unless @flags.include?(:dry)
+        File.open(path, 'r+') do |file|
+          if file.respond_to?(:test_write)
+            file.test_write(content, path)
+          else
+            file.write(content)
+          end
         end
       end
 
-      # Write to file.
-      parsed_content = parsed_file[:groups].map { |pf| pf[:body] }
-      new_content = parsed_content.join
-      if parsed_file[:content] != new_content
-        write(path, new_content) unless args.include?(:dry)
-        annotated_paths << path
-      end
+      @annotated_paths.push(path)
     end
 
     # Output results to user.
-    if annotated_paths.any?
-      puts "Annotated #{annotated_paths.join(', ')}"
-      if args.include?(:error_on_annotation)
-        1
+    #
+    # @return {Integer} - 0 for success, 1 for error
+    def output_results
+      if @annotated_paths.any?
+        puts("Annotated #{@annotated_paths.join(', ')}")
+        @flags.include?(:error_on_annotation) ? 1 : 0
       else
+        puts('Nothing to annotate')
         0
       end
-    else
-      puts 'Nothing to annotate'
-      0
     end
-  end
-
-  # Write given content to a file. If we're using an overridden version of File,
-  # then use its method instead for testing purposes.
-  #
-  # @param {String} path - File path to write to
-  # @param {String} content - Contents of the file
-  # @return {void}
-  def self.write(path, content)
-    File.open(path, 'r+') do |file|
-      if file.respond_to?(:test_write)
-        file.test_write(content, path)
-      else
-        file.write(content)
-      end
-    end
-  end
-
-  # Given a hash describing an action, generate an annotation in the form:
-  #
-  #   @route GET /waterlilies/:id (waterlilies)
-  #
-  # @param {Hash} action_info - Parsed line given by Chusaku::Parser
-  # @return {String} Annotation for given parsed line
-  def self.annotate(action_info)
-    verb = action_info[:verb]
-    path = action_info[:path]
-    name = action_info[:name]
-    annotation = "@route #{verb} #{path}"
-    annotation += " (#{name})" unless name.nil?
-    annotation
   end
 end
