@@ -5,19 +5,25 @@ require 'test_helper'
 class ChusakuTest < Minitest::Test
   def test_dry_run_flag
     File.reset_mock
-    capture_io { Chusaku.call([:dry]) }
+
+    capture_io { Chusaku.call(dry: true) }
+
     assert_empty(File.written_files)
   end
 
   def test_exit_with_error_on_annotation_flag
-    assert_empty(File.written_files)
+    File.reset_mock
+
     capture_io do
-      assert_equal(1, Chusaku.call([:error_on_annotation]))
+      assert_equal(1, Chusaku.call(error_on_annotation: true))
     end
+
     assert_equal(2, File.written_files.size)
   end
 
   def test_mock_app
+    File.reset_mock
+
     capture_io { Chusaku.call }
     files = File.written_files
     base_path = 'test/mock/app/controllers'
