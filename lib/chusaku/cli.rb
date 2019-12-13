@@ -6,17 +6,17 @@ require 'chusaku'
 module Chusaku
   # Enables flags for the `chusaku` executable.
   class CLI
+    attr_reader :options
+
     STATUS_SUCCESS = 0
     STATUS_ERROR = 1
-
-    attr_reader :options
 
     Finished = Class.new(RuntimeError)
     NotARailsProject = Class.new(RuntimeError)
 
     # Initializes a new instance of Chusaku::CLI.
     #
-    # @return {Chusaku::CLI} Instance of this class
+    # @return {Chusaku::CLI} - Instance of this class
     def initialize
       @options = {}
     end
@@ -24,7 +24,7 @@ module Chusaku
     # Parse CLI flags, if any, and handle applicable behaviors.
     #
     # @param {Array<String>} args - CLI arguments
-    # @return {Integer} 0 on success, 1 on error
+    # @return {Integer} - 0 on success, 1 on error
     def call(args = ARGV)
       optparser.parse!(args)
       check_for_rails_project
@@ -40,7 +40,7 @@ module Chusaku
 
     # Raises exception if Rails project cannot be detected.
     #
-    # @raise {Chusaku::CLI::NotARailsProject} Exception if not Rails project
+    # @raise {Chusaku::CLI::NotARailsProject} - Exception if not Rails project
     # @return {void}
     def check_for_rails_project
       has_controllers = File.directory?('./app/controllers')
@@ -50,7 +50,7 @@ module Chusaku
 
     # Returns an instance of OptionParser with supported flags.
     #
-    # @return {OptionParser} Preconfigured OptionParser instance
+    # @return {OptionParser} - Preconfigured OptionParser instance
     def optparser
       OptionParser.new do |opts|
         opts.banner = 'Usage: chusaku [options]'
