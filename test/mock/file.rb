@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Style/ClassVars
 class File
   @@written_files = {}
 
@@ -13,19 +14,22 @@ class File
     @@written_files[path] = content
   end
 
-  # Get the content of files in memory.
-  #
-  # @return {Hash} Mapping of files to their contents
-  def self.written_files
-    written_files = @@written_files
-    reset_mock
-    written_files
-  end
+  class << self
+    # Get the content of files in memory.
+    #
+    # @return {Hash} - Mapping of files to their contents
+    def written_files
+      written_files = @@written_files
+      reset_mock
+      written_files
+    end
 
-  # Reset in memory cache.
-  #
-  # @return {void}
-  def self.reset_mock
-    @@written_files = {}
+    # Reset in memory cache.
+    #
+    # @return {void}
+    def reset_mock
+      @@written_files = {}
+    end
   end
 end
+# rubocop:enable Style/ClassVars

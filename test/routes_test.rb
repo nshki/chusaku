@@ -14,19 +14,24 @@ class RoutesTest < Minitest::Test
         'api/tacos' => {
           'show' => [
             { verb: 'GET', path: '/', name: 'root' },
-            { verb: 'GET', path: '/api/tacos/:id', name: 'taco' }],
+            { verb: 'GET', path: '/api/tacos/:id', name: 'taco' }
+          ],
           'create' => [
-            { verb: 'POST', path: '/api/tacos', name: 'tacos' }],
+            { verb: 'POST', path: '/api/tacos', name: 'tacos' }
+          ],
           'update' => [
             { verb: 'PUT', path: '/api/tacos/:id', name: 'taco' },
-            { verb: 'PATCH', path: '/api/tacos/:id', name: 'taco' }]
+            { verb: 'PATCH', path: '/api/tacos/:id', name: 'taco' }
+          ]
         },
         'waterlilies' => {
           'show' => [
             { verb: 'GET', path: '/waterlilies/:id', name: 'waterlilies' },
-            { verb: 'GET', path: '/waterlilies/:id', name: 'waterlilies2' }],
+            { verb: 'GET', path: '/waterlilies/:id', name: 'waterlilies2' }
+          ],
           'one_off' => [
-            { verb: 'GET', path: '/one-off', name: nil }]
+            { verb: 'GET', path: '/one-off', name: nil }
+          ]
         }
       }
 

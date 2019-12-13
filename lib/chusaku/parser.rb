@@ -1,27 +1,39 @@
 # frozen_string_literal: true
 
 module Chusaku
+  # Handles parsing a file and groups its lines into categories.
   module Parser
-    # Parses a file and groups its lines into categories:
-    #
     # Example output:
     #
-    #   [ { type: :code,
-    #       body: 'class Foo\n',
-    #       action: nil },
-    #     { type: :comment,
-    #       body: '  # Bar\n  # Baz\n',
-    #       action: nil },
-    #     { type: :action,
-    #       body: '  def action_name; end\n',
-    #       action: 'action_name' }
-    #     { type: :code,
-    #       body: 'end # vanilla is the best flavor\n',
-    #       action: nil } ]
+    #   {
+    #     content: <Original file content>,
+    #     groups: [
+    #       {
+    #         type: :code,
+    #         body: 'class Foo\n',
+    #         action: nil
+    #       },
+    #       {
+    #         type: :comment,
+    #         body: '  # Bar\n  # Baz\n',
+    #         action: nil
+    #       },
+    #       {
+    #         type: :action,
+    #         body: '  def action_name; end\n',
+    #         action: 'action_name'
+    #       }
+    #       {
+    #         type: :code,
+    #         body: 'end # vanilla is the best flavor\n',
+    #         action: nil
+    #       }
+    #     ]
+    #   }
     #
     # @param {String} path - File path to parse
     # @param {Array<String>} actions - List of valid actions for this route
-    # @return {Hash} Parsed groups of the file and original content
+    # @return {Hash} - { content: String, groups: Array<Hash> }
     def self.call(path:, actions:)
       groups = []
       group = {}
@@ -43,10 +55,7 @@ module Chusaku
 
       # Push the last group onto the array and return.
       groups.push(group)
-      {
-        content: content,
-        groups: groups
-      }
+      { content: content, groups: groups }
     end
 
     # Given a line and actions, returns the line's type:
@@ -62,7 +71,7 @@ module Chusaku
     #
     # @param {String} line - A line of a file
     # @param {Array<String>} actions - List of valid actions for this route
-    # @return {Hash} Parsed line
+    # @return {Hash} - { type: Symbol, body: String, action: String }
     def self.parse_line(line:, actions:)
       comment_match = /^\s*#.*$/.match(line)
       def_match = /^\s*def\s+(\w*)\s*\w*.*$/.match(line)

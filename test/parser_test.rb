@@ -5,7 +5,7 @@ require 'test_helper'
 class ParserTest < Minitest::Test
   def test_example_file
     result = Chusaku::Parser.call \
-      path: "#{__dir__}/examples/example.rb",
+      path: "#{__dir__}/mock/examples/example.rb",
       actions: %w[foo]
 
     assert_equal(5, result[:groups].size)
@@ -13,114 +13,119 @@ class ParserTest < Minitest::Test
       %i[comment code comment action code],
       (result[:groups].map { |r| r[:type] })
     assert_equal \
-      result[:groups].map { |r| r[:body] }.join,
-      File.read("#{__dir__}/examples/example.rb")
+      File.read("#{__dir__}/mock/examples/example.rb"),
+      result[:groups].map { |r| r[:body] }.join
     assert_equal \
       [nil, nil, nil, 'foo', nil],
       (result[:groups].map { |r| r[:action] })
   end
 
   def test_empty_file
+    expected = [{}]
+
     result = Chusaku::Parser.call \
-      path: "#{__dir__}/examples/empty.rb",
+      path: "#{__dir__}/mock/examples/empty.rb",
       actions: []
 
-    assert_equal([{}], result[:groups])
+    assert_equal(expected, result[:groups])
   end
 
   def test_comment
+    expected = { type: :comment, body: '# foobar', action: nil }
     line = '# foobar'
 
     result = Chusaku::Parser.parse_line(line: line, actions: %w[foo bar])
 
-    assert_equal({ type: :comment, body: '# foobar', action: nil }, result)
+    assert_equal(expected, result)
   end
 
   def test_comment_with_spaces
+    expected = { type: :comment, body: '  # foobar  ', action: nil }
     line = '  # foobar  '
 
     result = Chusaku::Parser.parse_line(line: line, actions: %w[foo bar])
 
-    assert_equal({ type: :comment, body: '  # foobar  ', action: nil }, result)
+    assert_equal(expected, result)
   end
 
   def test_comment_with_tabs
+    expected = { type: :comment, body: '	# foobar	', action: nil }
     line = '	# foobar	'
 
     result = Chusaku::Parser.parse_line(line: line, actions: %w[foo bar])
 
-    assert_equal({ type: :comment, body: '	# foobar	', action: nil }, result)
+    assert_equal(expected, result)
   end
 
   def test_comment_with_spaces_and_tabs
+    expected = { type: :comment, body: '  	# foobar	  ', action: nil }
     line = '  	# foobar	  '
 
     result = Chusaku::Parser.parse_line(line: line, actions: %w[foo bar])
 
-    assert_equal \
-      ({ type: :comment, body: '  	# foobar	  ', action: nil }),
-      result
+    assert_equal(expected, result)
   end
 
   def test_action
+    expected = { type: :action, body: 'def foo', action: 'foo' }
     line = 'def foo'
 
     result = Chusaku::Parser.parse_line(line: line, actions: %w[foo bar])
 
-    assert_equal({ type: :action, body: 'def foo', action: 'foo' }, result)
+    assert_equal(expected, result)
   end
 
   def test_action_with_spaces
+    expected = { type: :action, body: '  def bar  ', action: 'bar' }
     line = '  def bar  '
 
     result = Chusaku::Parser.parse_line(line: line, actions: %w[foo bar])
 
-    assert_equal({ type: :action, body: '  def bar  ', action: 'bar' }, result)
+    assert_equal(expected, result)
   end
 
   def test_action_with_tabs
+    expected = { type: :action, body: '	def foo	', action: 'foo' }
     line = '	def foo	'
 
     result = Chusaku::Parser.parse_line(line: line, actions: %w[foo bar])
 
-    assert_equal({ type: :action, body: '	def foo	', action: 'foo' }, result)
+    assert_equal(expected, result)
   end
 
   def test_action_with_comment
+    expected = { type: :action, body: 'def bar # comment', action: 'bar' }
     line = 'def bar # comment'
 
     result = Chusaku::Parser.parse_line(line: line, actions: %w[foo bar])
 
-    assert_equal \
-      ({ type: :action, body: 'def bar # comment', action: 'bar' }),
-      result
+    assert_equal(expected, result)
   end
 
   def test_non_action_method
+    expected = { type: :code, body: 'def carrot', action: nil }
     line = 'def carrot'
 
     result = Chusaku::Parser.parse_line(line: line, actions: %w[foo bar])
 
-    assert_equal({ type: :code, body: 'def carrot', action: nil }, result)
+    assert_equal(expected, result)
   end
 
   def test_code
+    expected = { type: :code, body: 'puts "hello world!"', action: nil }
     line = 'puts "hello world!"'
 
     result = Chusaku::Parser.parse_line(line: line, actions: %w[foo bar])
 
-    assert_equal \
-      ({ type: :code, body: 'puts "hello world!"', action: nil }),
-      result
+    assert_equal(expected, result)
   end
 
   def test_code_with_comment
+    expected = { type: :code, body: 'puts "hello world!" # hey', action: nil }
     line = 'puts "hello world!" # hey'
 
     result = Chusaku::Parser.parse_line(line: line, actions: %w[foo bar])
 
-    assert_equal \
-      ({ type: :code, body: 'puts "hello world!" # hey', action: nil }),
-      result
+    assert_equal(expected, result)
   end
 end

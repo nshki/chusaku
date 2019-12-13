@@ -1,27 +1,21 @@
+require:
+  - rubocop-performance
+
 AllCops:
   Exclude:
     - 'bin/**/*'
-
-Layout/IndentationConsistency:
-  EnforcedStyle: rails
+    - 'test/mock/app/**/*'
+    - 'test/mock/examples/**/*'
 
 Metrics/AbcSize:
-  Enabled: false
+  Exclude:
+    - 'test/**/*'
 
 Metrics/MethodLength:
-  Enabled: false
+  Max: 25
+  Exclude:
+    - 'test/**/*'
 
-Metrics/PerceivedComplexity:
-  Enabled: false
-
-Style/ClassVars:
-  Enabled: false
-
-Style/CommentedKeyword:
-  Enabled: false
-
-Style/Documentation:
-  Enabled: false
-
-Style/RegexpLiteral:
-  Enabled: false
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'test/**/*'
