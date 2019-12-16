@@ -65,6 +65,8 @@ module Chusaku
       return unless group[:type] == :comment
 
       group[:body] = group[:body].gsub(/^\s*#\s*@route.*$\n/, '')
+      group[:body] =
+        group[:body].gsub(%r{^\s*# (GET|POST|PATCH\/PUT|DELETE) \/\S+$\n}, '')
     end
 
     # Add an annotation to the given group given by Chusaku::Parser that looks

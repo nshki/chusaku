@@ -3,6 +3,10 @@
 class TacosController < ApplicationController
   def show; end
 
+  # This is an example of generated annotations that come with Rails 6
+  # scaffolds. These should be replaced by Chusaku annotations.
+  # POST /api/tacos
+  # PATCH/PUT /api/tacos/1
   def create; end
 
   # Update all the tacos!

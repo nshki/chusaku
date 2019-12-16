@@ -39,6 +39,8 @@ class ChusakuTest < Minitest::Test
           # @route GET /api/tacos/:id (taco)
           def show; end
 
+          # This is an example of generated annotations that come with Rails 6
+          # scaffolds. These should be replaced by Chusaku annotations.
           # @route POST /api/tacos (tacos)
           def create; end
 
