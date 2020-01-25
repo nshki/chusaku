@@ -47,14 +47,14 @@ module Rails
         mock_route \
           controller: 'api/tacos',
           action: 'update',
-          verb: 'PUT',
+          verb: /^PUT|PATCH$/,
           path: '/api/tacos/:id(.:format)',
           name: nil
       routes.push \
         mock_route \
           controller: 'api/tacos',
           action: 'update',
-          verb: 'PATCH',
+          verb: 'PUT',
           path: '/api/tacos/:id(.:format)',
           name: nil
       routes.push \
@@ -113,9 +113,15 @@ module Rails
       route.expect(:defaults, controller: controller, action: action)
       route.expect(:verb, verb)
       route_path = Minitest::Mock.new
-      route_path.expect(:spec, path)
-      route.expect(:path, route_path)
-      route.expect(:name, name)
+
+      # We'll be calling these particular methods more than once to test for
+      # duplicate-removal, hence wrapping in `.times` block.
+      2.times do
+        route_path.expect(:spec, path)
+        route.expect(:path, route_path)
+        route.expect(:name, name)
+      end
+
       route
     end
   end

@@ -31,7 +31,11 @@ module Chusaku
           controller, action = extract_controller_and_action_from(route)
           routes[controller] ||= {}
           routes[controller][action] ||= []
-          routes[controller][action].push(format_route(route))
+
+          verbs_for(route).each do |verb|
+            routes[controller][action].push(format(route: route, verb: verb))
+            routes[controller][action].uniq!
+          end
         end
 
         backfill_routes(routes)
@@ -39,13 +43,28 @@ module Chusaku
 
       private
 
-      # Extract information of a given route.
+      # Extract the HTTP verbs for a Rails route. Required for older versions of
+      # Rails that return regular expressions for a route verb which sometimes
+      # contains multiple verbs.
       #
       # @param {ActionDispatch::Journey::Route} route - Route given by Rails
+      # @return {Array<String>} - List of HTTP verbs for the given route
+      def verbs_for(route)
+        route_verb = route.verb.to_s
+
+        ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].select do |verb|
+          route_verb.include?(verb)
+        end
+      end
+
+      # Formats information for a given route.
+      #
+      # @param {ActionDispatch::Journey::Route} route - Route given by Rails
+      # @param {String} verb - HTTP verb
       # @return {Hash} - { verb: String, path: String, name: String }
-      def format_route(route)
+      def format(route:, verb:)
         {
-          verb: route.verb,
+          verb: verb,
           path: route.path.spec.to_s.gsub('(.:format)', ''),
           name: route.name
         }
