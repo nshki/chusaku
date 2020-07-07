@@ -98,7 +98,7 @@ module Chusaku
       return unless parsed_file[:content] != content
 
       unless @flags.include?(:dry)
-        File.open(path, 'r+') do |file|
+        File.open(path, 'w') do |file|
           if file.respond_to?(:test_write)
             file.test_write(content, path)
           else
