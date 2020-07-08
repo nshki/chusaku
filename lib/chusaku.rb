@@ -98,7 +98,11 @@ module Chusaku
       return unless parsed_file[:content] != content
 
       unless @flags.include?(:dry)
-        File.open(path, 'w') do |file|
+        # When running the test suite, we want to make sure we're not
+        # overwriting any files. `r` mode ensures that.
+        mode = File.instance_methods.include?(:test_write) ? 'r' : 'w'
+
+        File.open(path, mode) do |file|
           if file.respond_to?(:test_write)
             file.test_write(content, path)
           else
