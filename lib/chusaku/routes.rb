@@ -32,16 +32,31 @@ module Chusaku
           routes[controller] ||= {}
           routes[controller][action] ||= []
 
-          verbs_for(route).each do |verb|
-            routes[controller][action].push(format(route: route, verb: verb))
-            routes[controller][action].uniq!
-          end
+          add_info_for \
+            route: route,
+            routes: routes,
+            controller: controller,
+            action: action
         end
 
         backfill_routes(routes)
       end
 
       private
+
+      # Adds formatted route info for the given param combination.
+      #
+      # @param {Hash} route - Route info
+      # @param {Hash} routes - Collection of all route info
+      # @param {String} controller - Controller key
+      # @param {STring} action - Action key
+      # @return {void}
+      def add_info_for(route:, routes:, controller:, action:)
+        verbs_for(route).each do |verb|
+          routes[controller][action].push(format(route: route, verb: verb))
+          routes[controller][action].uniq!
+        end
+      end
 
       # Extract the HTTP verbs for a Rails route. Required for older versions of
       # Rails that return regular expressions for a route verb which sometimes
@@ -52,7 +67,7 @@ module Chusaku
       def verbs_for(route)
         route_verb = route.verb.to_s
 
-        ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].select do |verb|
+        %w[GET POST PUT PATCH DELETE].select do |verb|
           route_verb.include?(verb)
         end
       end

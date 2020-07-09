@@ -94,24 +94,46 @@ module Chusaku
     # @param {Hash} parsed_file - Hash mutated by `annotate_group`
     # @return {void}
     def write_to_file(path:, parsed_file:)
-      content = parsed_file[:groups].map { |pf| pf[:body] }.join
-      return unless parsed_file[:content] != content
+      new_content = new_content_for(parsed_file)
+      return unless parsed_file[:content] != new_content
 
       unless @flags.include?(:dry)
-        # When running the test suite, we want to make sure we're not
-        # overwriting any files. `r` mode ensures that.
-        mode = File.instance_methods.include?(:test_write) ? 'r' : 'w'
-
-        File.open(path, mode) do |file|
-          if file.respond_to?(:test_write)
-            file.test_write(content, path)
-          else
-            file.write(content)
-          end
-        end
+        perform_write(path: path, content: new_content)
       end
 
       @annotated_paths.push(path)
+    end
+
+    # Extracts the new file content for the given parsed file.
+    #
+    # @param {Hash} parsed_file - { groups: Array<Hash> }
+    # @return {String} - New file content
+    def new_content_for(parsed_file)
+      parsed_file[:groups].map { |pf| pf[:body] }.join
+    end
+
+    # Wraps the write operation. Needed to clearly distinguish whether it's a
+    # write in the test suite or a write in actual use.
+    #
+    # @param {String} path - File path
+    # @param {String} content - File content
+    # @return {void}
+    def perform_write(path:, content:)
+      File.open(path, file_mode) do |file|
+        if file.respond_to?(:test_write)
+          file.test_write(content, path)
+        else
+          file.write(content)
+        end
+      end
+    end
+
+    # When running the test suite, we want to make sure we're not overwriting
+    # any files. `r` mode ensures that, and `w` is used for actual usage.
+    #
+    # @return {String} - 'r' or 'w'
+    def file_mode
+      File.instance_methods.include?(:test_write) ? 'r' : 'w'
     end
 
     # Output results to user.
