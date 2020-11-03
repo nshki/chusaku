@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name = 'chusaku'
   spec.version = Chusaku::VERSION
   spec.authors = ['Nishiki Liu']
-  spec.email = ['nishiki.liu@gmail.com']
+  spec.email = ['nishiki@hey.com']
 
   spec.summary = 'Annotate your Rails controllers with route info.'
   spec.description = 'Annotate your Rails controllers with route info.'
@@ -37,8 +37,8 @@ Gem::Specification.new do |spec|
       f.match(%r{^(test|spec|features)/})
     end
   end
-  spec.bindir        = 'bin'
-  spec.executables   = 'chusaku'
+  spec.bindir = 'bin'
+  spec.executables = 'chusaku'
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 2.0'
