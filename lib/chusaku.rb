@@ -152,7 +152,7 @@ module Chusaku
     end
 
     def inspect_defaults(hash)
-      '{' + hash.map { |key, value| "#{key}: #{value.inspect}" }.join(', ') + '}'
+      ' {' + hash.map { |key, value| "#{key}: #{value.inspect}" }.join(', ') + '}'
     end
   end
 end
