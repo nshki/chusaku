@@ -28,7 +28,7 @@ module Chusaku
         routes = {}
 
         Rails.application.routes.routes.each do |route|
-          controller, action = extract_controller_and_action_from(route)
+          controller, action, defaults = extract_data_from(route)
           routes[controller] ||= {}
           routes[controller][action] ||= []
 
@@ -36,7 +36,8 @@ module Chusaku
             route: route,
             routes: routes,
             controller: controller,
-            action: action
+            action: action,
+            defaults: defaults
         end
 
         backfill_routes(routes)
@@ -51,9 +52,9 @@ module Chusaku
       # @param {String} controller - Controller key
       # @param {STring} action - Action key
       # @return {void}
-      def add_info_for(route:, routes:, controller:, action:)
+      def add_info_for(route:, routes:, controller:, action:, defaults:)
         verbs_for(route).each do |verb|
-          routes[controller][action].push(format(route: route, verb: verb))
+          routes[controller][action].push(format(route: route, verb: verb, defaults: defaults))
           routes[controller][action].uniq!
         end
       end
@@ -77,11 +78,12 @@ module Chusaku
       # @param {ActionDispatch::Journey::Route} route - Route given by Rails
       # @param {String} verb - HTTP verb
       # @return {Hash} - { verb: String, path: String, name: String }
-      def format(route:, verb:)
+      def format(route:, verb:, defaults:)
         {
           verb: verb,
           path: route.path.spec.to_s.gsub('(.:format)', ''),
-          name: route.name
+          name: route.name,
+          defaults: defaults
         }
       end
 
@@ -109,12 +111,12 @@ module Chusaku
       #
       # @param {ActionDispatch::Journey::Route} route - Route instance
       # @return {Array<String>} - [String, String]
-      def extract_controller_and_action_from(route)
-        defaults = route.defaults
-        controller = defaults[:controller]
-        action = defaults[:action]
+      def extract_data_from(route)
+        defaults = route.defaults.dup
+        controller = defaults.delete(:controller)
+        action = defaults.delete(:action)
 
-        [controller, action]
+        [controller, action, defaults]
       end
     end
   end

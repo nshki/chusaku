@@ -72,6 +72,7 @@ class ChusakuTest < Minitest::Test
         class WaterliliesController < ApplicationController
           # @route GET /waterlilies/:id (waterlilies)
           # @route GET /waterlilies/:id (waterlilies2)
+          # @route GET /waterlilies/:id{blue: true} (waterlilies_blue)
           def show; end
 
           # @route GET /one-off

@@ -81,7 +81,9 @@ module Chusaku
       whitespace = /^(\s*).*$/.match(group[:body])[1]
       route_data.reverse_each do |datum|
         name = datum[:name]
+        defaults = datum[:defaults]
         annotation = "@route #{datum[:verb]} #{datum[:path]}"
+        annotation += inspect_defaults(defaults) unless defaults.nil? || defaults.empty?
         annotation += " (#{name})" unless name.nil?
         comment = "#{whitespace}# #{annotation}\n"
         group[:body] = comment + group[:body]
@@ -147,6 +149,10 @@ module Chusaku
         puts('Nothing to annotate')
         0
       end
+    end
+
+    def inspect_defaults(hash)
+      '{' + hash.map { |key, value| "#{key}: #{value.inspect}" }.join(', ') + '}'
     end
   end
 end

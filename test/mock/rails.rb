@@ -74,6 +74,14 @@ module Rails
       routes.push \
         mock_route \
           controller: 'waterlilies',
+          action: 'show',
+          verb: 'GET',
+          path: '/waterlilies/:id(.:format)',
+          name: 'waterlilies_blue',
+          defaults: { blue: true }
+      routes.push \
+        mock_route \
+          controller: 'waterlilies',
           action: 'one_off',
           verb: 'GET',
           path: '/one-off',
@@ -108,9 +116,9 @@ module Rails
     # @param {String} path - Mocked Rails path
     # @param {String} name - Mocked route name
     # @return {Minitest::Mock} - Mocked route
-    def mock_route(controller:, action:, verb:, path:, name:)
+    def mock_route(controller:, action:, verb:, path:, name:, defaults: {})
       route = Minitest::Mock.new
-      route.expect(:defaults, controller: controller, action: action)
+      route.expect(:defaults, controller: controller, action: action, **defaults)
       route.expect(:verb, verb)
       route_path = Minitest::Mock.new
 
