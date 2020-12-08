@@ -80,14 +80,29 @@ module Chusaku
     def annotate_group(group:, route_data:)
       whitespace = /^(\s*).*$/.match(group[:body])[1]
       route_data.reverse_each do |datum|
-        name = datum[:name]
-        defaults = datum[:defaults]
-        annotation = "@route #{datum[:verb]} #{datum[:path]}"
-        annotation += inspect_defaults(defaults) unless defaults.nil? || defaults.empty?
-        annotation += " (#{name})" unless name.nil?
-        comment = "#{whitespace}# #{annotation}\n"
+        comment = "#{whitespace}# #{annotate_route(**datum)}\n"
         group[:body] = comment + group[:body]
       end
+    end
+
+    # Generate route annotation
+    #
+    # @param {String} verb
+    # @param {String} path
+    # @param {String} name
+    # @param {Hash} defaults
+    # @return {String}
+    def annotate_route(verb:, path:, name:, defaults:, **)
+      annotation = "@route #{verb} #{path}"
+      if defaults&.any?
+        defaults_str =
+          defaults
+          .map { |key, value| "#{key}: #{value.inspect}" }
+          .join(', ')
+        annotation += " {#{defaults_str}}"
+      end
+      annotation += " (#{name})" unless name.nil?
+      annotation
     end
 
     # Write annotated content to a file if it differs from the original.
@@ -149,10 +164,6 @@ module Chusaku
         puts('Nothing to annotate')
         0
       end
-    end
-
-    def inspect_defaults(hash)
-      ' {' + hash.map { |key, value| "#{key}: #{value.inspect}" }.join(', ') + '}'
     end
   end
 end

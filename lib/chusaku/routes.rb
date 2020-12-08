@@ -54,7 +54,8 @@ module Chusaku
       # @return {void}
       def add_info_for(route:, routes:, controller:, action:, defaults:)
         verbs_for(route).each do |verb|
-          routes[controller][action].push(format(route: route, verb: verb, defaults: defaults))
+          routes[controller][action]
+            .push(format(route: route, verb: verb, defaults: defaults))
           routes[controller][action].uniq!
         end
       end
