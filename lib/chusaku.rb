@@ -85,13 +85,13 @@ module Chusaku
       end
     end
 
-    # Generate route annotation
+    # Generate route annotation.
     #
-    # @param {String} verb
-    # @param {String} path
-    # @param {String} name
-    # @param {Hash} defaults
-    # @return {String}
+    # @param {String} verb - HTTP verb for route
+    # @param {String} path - Rails path for route
+    # @param {String} name - Name used in route helpers
+    # @param {Hash} defaults - Default parameters for route
+    # @return {String} - @route <verb> <path> {<defaults>} (<name>)
     def annotate_route(verb:, path:, name:, defaults:, **)
       annotation = "@route #{verb} #{path}"
       if defaults&.any?

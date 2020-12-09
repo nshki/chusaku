@@ -50,7 +50,8 @@ module Chusaku
       # @param {Hash} route - Route info
       # @param {Hash} routes - Collection of all route info
       # @param {String} controller - Controller key
-      # @param {STring} action - Action key
+      # @param {String} action - Action key
+      # @param {Hash} defaults - Default parameters for route
       # @return {void}
       def add_info_for(route:, routes:, controller:, action:, defaults:)
         verbs_for(route).each do |verb|
@@ -78,6 +79,7 @@ module Chusaku
       #
       # @param {ActionDispatch::Journey::Route} route - Route given by Rails
       # @param {String} verb - HTTP verb
+      # @param {Hash} defaults - Default parameters for route
       # @return {Hash} - { verb: String, path: String, name: String }
       def format(route:, verb:, defaults:)
         {
@@ -111,7 +113,7 @@ module Chusaku
       # Given a route, extract the controller and action strings.
       #
       # @param {ActionDispatch::Journey::Route} route - Route instance
-      # @return {Array<String>} - [String, String]
+      # @return {Array<Object>} - [String, String, Hash]
       def extract_data_from(route)
         defaults = route.defaults.dup
         controller = defaults.delete(:controller)

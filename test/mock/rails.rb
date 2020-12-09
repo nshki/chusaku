@@ -115,6 +115,7 @@ module Rails
     # @param {String} verb - HTTP verb
     # @param {String} path - Mocked Rails path
     # @param {String} name - Mocked route name
+    # @param {Hash} defaults - Mocked default params
     # @return {Minitest::Mock} - Mocked route
     def mock_route(controller:, action:, verb:, path:, name:, defaults: {})
       route = Minitest::Mock.new
