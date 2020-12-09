@@ -8,29 +8,30 @@ class RoutesTest < Minitest::Test
       {
         'api/burritos' => {
           'create' => [
-            { verb: 'POST', path: '/api/burritos', name: 'burritos' }
+            { verb: 'POST', path: '/api/burritos', name: 'burritos', defaults: {} }
           ]
         },
         'api/tacos' => {
           'show' => [
-            { verb: 'GET', path: '/', name: 'root' },
-            { verb: 'GET', path: '/api/tacos/:id', name: 'taco' }
+            { verb: 'GET', path: '/', name: 'root', defaults: {} },
+            { verb: 'GET', path: '/api/tacos/:id', name: 'taco', defaults: {} }
           ],
           'create' => [
-            { verb: 'POST', path: '/api/tacos', name: 'tacos' }
+            { verb: 'POST', path: '/api/tacos', name: 'tacos', defaults: {} }
           ],
           'update' => [
-            { verb: 'PUT', path: '/api/tacos/:id', name: 'taco' },
-            { verb: 'PATCH', path: '/api/tacos/:id', name: 'taco' }
+            { verb: 'PUT', path: '/api/tacos/:id', name: 'taco', defaults: {} },
+            { verb: 'PATCH', path: '/api/tacos/:id', name: 'taco', defaults: {} }
           ]
         },
         'waterlilies' => {
           'show' => [
-            { verb: 'GET', path: '/waterlilies/:id', name: 'waterlilies' },
-            { verb: 'GET', path: '/waterlilies/:id', name: 'waterlilies2' }
+            { verb: 'GET', path: '/waterlilies/:id', name: 'waterlilies', defaults: {} },
+            { verb: 'GET', path: '/waterlilies/:id', name: 'waterlilies2', defaults: {} },
+            { verb: 'GET', path: '/waterlilies/:id', name: 'waterlilies_blue', defaults: { blue: true } }
           ],
           'one_off' => [
-            { verb: 'GET', path: '/one-off', name: nil }
+            { verb: 'GET', path: '/one-off', name: nil, defaults: {} }
           ]
         }
       }
