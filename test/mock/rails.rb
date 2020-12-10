@@ -11,7 +11,7 @@ module Rails
     # Lets us call `Rails.application.routes.routes` without a skeleton Rails
     # app.
     #
-    # @return {Minitest::Mock} - Mocked `Rails.application`
+    # @return [Minitest::Mock] Mocked `Rails.application`
     def application
       routes = []
 
@@ -96,7 +96,7 @@ module Rails
 
     # Lets us call `Rails.root` without an skeleton Rails app.
     #
-    # @return {Minitest::Mock} - Mocked `Rails.root`
+    # @return [Minitest::Mock] Mocked `Rails.root`
     def root
       rails_root = Minitest::Mock.new
       rails_root.expect \
@@ -110,13 +110,15 @@ module Rails
 
     # Stored procedure for mocking a new route.
     #
-    # @param {String} controller - Mocked controller name
-    # @param {String} action - Mocked action name
-    # @param {String} verb - HTTP verb
-    # @param {String} path - Mocked Rails path
-    # @param {String} name - Mocked route name
-    # @param {Hash} defaults - Mocked default params
-    # @return {Minitest::Mock} - Mocked route
+    # @param controller [String] Mocked controller name
+    # @param action [String] Mocked action name
+    # @param verb [String] HTTP verb
+    # @param path [String] Mocked Rails path
+    # @param name [String] Mocked route name
+    # @param defaults [Hash] Mocked default params
+    # @return [Minitest::Mock] Mocked route
+    #
+    # rubocop:disable Metrics/ParameterLists
     def mock_route(controller:, action:, verb:, path:, name:, defaults: {})
       route = Minitest::Mock.new
       route.expect(:defaults, controller: controller, action: action, **defaults)
@@ -133,5 +135,6 @@ module Rails
 
       route
     end
+    # rubocop:enable Metrics/ParameterLists
   end
 end

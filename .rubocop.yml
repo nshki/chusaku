@@ -7,6 +7,9 @@ AllCops:
     - 'test/mock/app/**/*'
     - 'test/mock/examples/**/*'
 
+Layout/LineLength:
+  Max: 120
+
 Metrics/AbcSize:
   Exclude:
     - 'test/**/*'
@@ -15,6 +18,9 @@ Metrics/MethodLength:
   Max: 25
   Exclude:
     - 'test/**/*'
+
+Metrics/ModuleLength:
+  Max: 250
 
 Style/ClassAndModuleChildren:
   Exclude:
