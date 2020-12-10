@@ -15,8 +15,8 @@ module Chusaku
     #     # ...
     #   end
     #
-    # @param {Hash} flags - CLI flags
-    # @return {Integer} - 0 on success, 1 on error
+    # @param flags [Hash] CLI flags
+    # @return [Integer] 0 on success, 1 on error
     def call(flags = {})
       @flags = flags
       @routes = Chusaku::Routes.call
@@ -38,10 +38,10 @@ module Chusaku
 
     # Adds annotations to the given file.
     #
-    # @param {String} path - Path to file
-    # @param {String} controller - Controller name
-    # @param {Array<String>} actions - List of valid actions for the controller
-    # @return {void}
+    # @param path [String] Path to file
+    # @param controller [String] Controller name
+    # @param actions [Array<String>] List of valid actions for the controller
+    # @return [void]
     def annotate_file(path:, controller:, actions:)
       parsed_file = Chusaku::Parser.call(path: path, actions: actions)
       parsed_file[:groups].each_cons(2) do |prev, curr|
@@ -59,7 +59,7 @@ module Chusaku
 
     # Given a parsed group, clean out its contents.
     #
-    # @param {Hash} group - { type: Symbol, body: String }
+    # @param group [Hash] { type => Symbol, body => String }
     # @return {void}
     def clean_group(group)
       return unless group[:type] == :comment
@@ -74,9 +74,9 @@ module Chusaku
     #
     #   @route GET /waterlilies/:id (waterlilies)
     #
-    # @param {Hash} group - Parsed content given by Chusaku::Parser
-    # @param {Hash} route_data - Individual route data given by Chusaku::Routes
-    # @return {void}
+    # @param group [Hash] Parsed content given by Chusaku::Parser
+    # @param route_data [Hash] Individual route data given by Chusaku::Routes
+    # @return [void]
     def annotate_group(group:, route_data:)
       whitespace = /^(\s*).*$/.match(group[:body])[1]
       route_data.reverse_each do |datum|
@@ -87,11 +87,11 @@ module Chusaku
 
     # Generate route annotation.
     #
-    # @param {String} verb - HTTP verb for route
-    # @param {String} path - Rails path for route
-    # @param {String} name - Name used in route helpers
-    # @param {Hash} defaults - Default parameters for route
-    # @return {String} - "@route <verb> <path> {<defaults>} (<name>)"
+    # @param verb [String] HTTP verb for route
+    # @param path [String] Rails path for route
+    # @param name [String] Name used in route helpers
+    # @param defaults [Hash] Default parameters for route
+    # @return [String] "@route <verb> <path> {<defaults>} (<name>)"
     def annotate_route(verb:, path:, name:, defaults:)
       annotation = "@route #{verb} #{path}"
       if defaults&.any?
@@ -107,9 +107,9 @@ module Chusaku
 
     # Write annotated content to a file if it differs from the original.
     #
-    # @param {String} path - File path to write to
-    # @param {Hash} parsed_file - Hash mutated by `annotate_group`
-    # @return {void}
+    # @param path [String] File path to write to
+    # @param parsed_file [Hash] Hash mutated by {#annotate_group}
+    # @return [void]
     def write_to_file(path:, parsed_file:)
       new_content = new_content_for(parsed_file)
       return unless parsed_file[:content] != new_content
@@ -123,8 +123,8 @@ module Chusaku
 
     # Extracts the new file content for the given parsed file.
     #
-    # @param {Hash} parsed_file - { groups: Array<Hash> }
-    # @return {String} - New file content
+    # @param parsed_file [Hash] { groups => Array<Hash> }
+    # @return [String] New file content
     def new_content_for(parsed_file)
       parsed_file[:groups].map { |pf| pf[:body] }.join
     end
@@ -132,9 +132,9 @@ module Chusaku
     # Wraps the write operation. Needed to clearly distinguish whether it's a
     # write in the test suite or a write in actual use.
     #
-    # @param {String} path - File path
-    # @param {String} content - File content
-    # @return {void}
+    # @param path [String] File path
+    # @param content [String] File content
+    # @return [void]
     def perform_write(path:, content:)
       File.open(path, file_mode) do |file|
         if file.respond_to?(:test_write)
@@ -148,14 +148,14 @@ module Chusaku
     # When running the test suite, we want to make sure we're not overwriting
     # any files. `r` mode ensures that, and `w` is used for actual usage.
     #
-    # @return {String} - 'r' or 'w'
+    # @return [String] 'r' or 'w'
     def file_mode
       File.instance_methods.include?(:test_write) ? 'r' : 'w'
     end
 
     # Output results to user.
     #
-    # @return {Integer} - 0 for success, 1 for error
+    # @return [Integer] 0 for success, 1 for error
     def output_results
       if @annotated_paths.any?
         puts("Annotated #{@annotated_paths.join(', ')}")
