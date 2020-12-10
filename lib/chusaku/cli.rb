@@ -14,17 +14,17 @@ module Chusaku
     Finished = Class.new(RuntimeError)
     NotARailsProject = Class.new(RuntimeError)
 
-    # Initializes a new instance of Chusaku::CLI.
+    # Initializes a new instance of `Chusaku::CLI`.
     #
-    # @return {Chusaku::CLI} - Instance of this class
+    # @return [Chusaku::CLI] Instance of this class
     def initialize
       @options = {}
     end
 
     # Parse CLI flags, if any, and handle applicable behaviors.
     #
-    # @param {Array<String>} args - CLI arguments
-    # @return {Integer} - 0 on success, 1 on error
+    # @param args [Array<String>] CLI arguments
+    # @return [Integer] 0 on success, 1 on error
     def call(args = ARGV)
       optparser.parse!(args)
       check_for_rails_project
@@ -40,8 +40,8 @@ module Chusaku
 
     # Raises exception if Rails project cannot be detected.
     #
-    # @raise {Chusaku::CLI::NotARailsProject} - Exception if not Rails project
-    # @return {void}
+    # @raise [Chusaku::CLI::NotARailsProject] Exception if not Rails project
+    # @return [void]
     def check_for_rails_project
       has_controllers = File.directory?('./app/controllers')
       has_rakefile = File.exist?('./Rakefile')
@@ -50,7 +50,7 @@ module Chusaku
 
     # Returns an instance of OptionParser with supported flags.
     #
-    # @return {OptionParser} - Preconfigured OptionParser instance
+    # @return [OptionParser] Preconfigured OptionParser instance
     def optparser
       OptionParser.new do |opts|
         opts.banner = 'Usage: chusaku [options]'
@@ -63,8 +63,8 @@ module Chusaku
 
     # Adds `--exit-with-error-on-annotation` flag.
     #
-    # @param {OptionParser} opts - OptionParser instance
-    # @return {void}
+    # @param opts [OptionParser] OptionParser instance
+    # @return [void]
     def add_error_on_annotation_flag(opts)
       opts.on(
         '--exit-with-error-on-annotation',
@@ -76,8 +76,8 @@ module Chusaku
 
     # Adds `--dry-run` flag.
     #
-    # @param {OptionParser} opts - OptionParser instance
-    # @return {void}
+    # @param opts [OptionParser] OptionParser instance
+    # @return [void]
     def add_dry_run_flag(opts)
       opts.on(
         '--dry-run',
@@ -89,8 +89,8 @@ module Chusaku
 
     # Adds `--version` flag.
     #
-    # @param {OptionParser} opts - OptionParser instance
-    # @return {void}
+    # @param opts [OptionParser] OptionParser instance
+    # @return [void]
     def add_version_flag(opts)
       opts.on(
         '-v',
@@ -104,8 +104,8 @@ module Chusaku
 
     # Adds `--help` flag.
     #
-    # @param {OptionParser} opts - OptionParser instance
-    # @return {void}
+    # @param opts [OptionParser] OptionParser instance
+    # @return [void]
     def add_help_flag(opts)
       opts.on(
         '-h',
