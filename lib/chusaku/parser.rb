@@ -3,6 +3,8 @@
 module Chusaku
   # Handles parsing a file and groups its lines into categories.
   module Parser
+    # Primary method to call.
+    #
     # Example output:
     #
     #   {
@@ -31,9 +33,9 @@ module Chusaku
     #     ]
     #   }
     #
-    # @param {String} path - File path to parse
-    # @param {Array<String>} actions - List of valid actions for this route
-    # @return {Hash} - { content: String, groups: Array<Hash> }
+    # @param path [String] File path to parse
+    # @param actions [Array<String>] List of valid actions for this route
+    # @return [Hash] { content => String, groups => Array<Hash> }
     def self.call(path:, actions:)
       groups = []
       group = {}
@@ -58,20 +60,22 @@ module Chusaku
       { content: content, groups: groups }
     end
 
-    # Given a line and actions, returns the line's type:
+    # Given a line and actions, returns the line's type.
+    #
+    # A type can be one of:
     #
     #   1. comment - A line that is entirely commented. Lines that have trailing
     #                comments do not fall under this category.
     #   2. action  - A line that contains an action definition.
     #   3. code    - Anything else.
     #
-    # And give back a Hash in the form:
+    # Returns a Hash in the form:
     #
     #   { type: :action, body: 'def foo', action: 'foo' }
     #
-    # @param {String} line - A line of a file
-    # @param {Array<String>} actions - List of valid actions for this route
-    # @return {Hash} - { type: Symbol, body: String, action: String }
+    # @param line [String] A line of a file
+    # @param actions [Array<String>] List of valid actions for this route
+    # @return [Hash] { type => Symbol, body => String, action => String }
     def self.parse_line(line:, actions:)
       comment_match = /^\s*#.*$/.match(line)
       def_match = /^\s*def\s+(\w*)\s*\w*.*$/.match(line)
