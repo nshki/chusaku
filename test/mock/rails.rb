@@ -117,6 +117,8 @@ module Rails
     # @param name [String] Mocked route name
     # @param defaults [Hash] Mocked default params
     # @return [Minitest::Mock] Mocked route
+    #
+    # rubocop:disable Metrics/ParameterLists
     def mock_route(controller:, action:, verb:, path:, name:, defaults: {})
       route = Minitest::Mock.new
       route.expect(:defaults, controller: controller, action: action, **defaults)
@@ -133,5 +135,6 @@ module Rails
 
       route
     end
+    # rubocop:enable Metrics/ParameterLists
   end
 end
