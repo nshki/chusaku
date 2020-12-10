@@ -114,7 +114,7 @@ module Chusaku
       new_content = new_content_for(parsed_file)
       return unless parsed_file[:content] != new_content
 
-      @flags.include?(:dry) && perform_write(path: path, content: new_content)
+      !@flags.include?(:dry) && perform_write(path: path, content: new_content)
       @annotated_paths.push(path)
     end
 
