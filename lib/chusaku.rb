@@ -154,12 +154,34 @@ module Chusaku
     #
     # @return [Integer] 0 for success, 1 for error
     def output_results
-      if @annotated_paths.any?
-        puts("Annotated #{@annotated_paths.join(', ')}")
-        @flags.include?(:error_on_annotation) ? 1 : 0
+      puts(output_copy)
+      exit_code = 0
+      exit_code = 1 if @annotated_paths.any? && @flags.include?(:error_on_annotation)
+      exit_code
+    end
+
+    # Determines the copy to be used in the program output.
+    #
+    # @return [String] Copy to be outputted to user
+    def output_copy
+      return 'Nothing to annotate.' if @annotated_paths.empty?
+
+      annotated_paths = @annotated_paths.join(', ')
+      dry_run = @flags.include?(:dry)
+      error_on_annotation = @flags.include?(:error_on_annotation)
+
+      if dry_run && error_on_annotation
+        <<~COPY
+          Annotations missing in the following files: #{annotated_paths}
+
+          Run `chusaku` to annotate them. Exiting with status code 1.
+        COPY
+      elsif dry_run
+        "The following files would be annotated without `--dry-run`: #{annotated_paths}"
+      elsif error_on_annotation
+        "Annotated #{annotated_paths}.\n\nExiting with status code 1."
       else
-        puts('Nothing to annotate')
-        0
+        "Annotated #{annotated_paths}."
       end
     end
   end

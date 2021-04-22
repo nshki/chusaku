@@ -5,29 +5,49 @@ require 'test_helper'
 class ChusakuTest < Minitest::Test
   def test_dry_run_flag
     File.reset_mock
+    exit_code = 0
 
-    capture_io { Chusaku.call(dry: true) }
+    out, _err = capture_io { exit_code = Chusaku.call(dry: true) }
 
+    assert_equal(0, exit_code)
     assert_empty(File.written_files)
+    assert_includes(out, 'would be annotated')
   end
 
   def test_exit_with_error_on_annotation_flag
     File.reset_mock
+    exit_code = 0
 
-    capture_io do
-      assert_equal(1, Chusaku.call(error_on_annotation: true))
-    end
+    out, _err = capture_io { exit_code = Chusaku.call(error_on_annotation: true) }
 
-    assert_equal(2, File.written_files.size)
+    assert_equal(1, exit_code)
+    assert_equal(2, File.written_files.count)
+    assert_includes(out, 'status code 1')
+  end
+
+  def test_dry_run_and_exit_with_error_flag
+    File.reset_mock
+    exit_code = 0
+
+    out, _err = capture_io { exit_code = Chusaku.call(dry: true, error_on_annotation: true) }
+
+    assert_equal(1, exit_code)
+    assert_empty(File.written_files)
+    assert_includes(out, 'Annotations missing')
+    assert_includes(out, 'status code 1')
   end
 
   def test_mock_app
     File.reset_mock
+    exit_code = 0
 
-    capture_io { Chusaku.call }
+    out, _err = capture_io { exit_code = Chusaku.call }
     files = File.written_files
     base_path = 'test/mock/app/controllers'
 
+    assert_equal(0, exit_code)
+    assert(2, files.count)
+    assert_includes(out, 'Annotated')
     refute_includes(files, "#{base_path}/api/burritos_controller.rb")
 
     expected =
