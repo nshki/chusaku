@@ -44,14 +44,14 @@ module Chusaku
       content.each_line do |line|
         parsed_line = parse_line(line: line, actions: actions)
 
-        if group[:type] != parsed_line[:type]
+        if group[:type] == parsed_line[:type]
+          # Same group. Push the current line into the current group.
+          group[:body] += line
+        else
           # Now looking at a new group. Push the current group onto the array
           # and start a new one.
           groups.push(group) unless group.empty?
           group = parsed_line
-        else
-          # Same group. Push the current line into the current group.
-          group[:body] += line
         end
       end
 
