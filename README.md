@@ -1,8 +1,6 @@
 # Chusaku
 
-| Gem | CI | Quality |
-|-----|----|---------|
-|[![Gem Version](https://badge.fury.io/rb/chusaku.svg)](https://badge.fury.io/rb/chusaku)|[![CircleCI](https://circleci.com/gh/nshki/chusaku.svg?style=svg&circle-token=e1917972632f242932171de0ca5443148e83151c)](https://circleci.com/gh/nshki/chusaku)|[![Maintainability](https://api.codeclimate.com/v1/badges/e21235bd513aadf0407b/maintainability)](https://codeclimate.com/github/nshki/chusaku/maintainability)
+[![Gem Version](https://badge.fury.io/rb/chusaku.svg)](https://badge.fury.io/rb/chusaku)
 
 Add comments above your Rails actions that look like:
 
