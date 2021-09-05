@@ -13,5 +13,6 @@ jobs:
     - name: Run RuboCop
       uses: reviewdog/action-rubocop@v2
       with:
+        rubocop_version: gemfile
         github_token: ${{ secrets.github_token }}
         reporter: github-pr-review
