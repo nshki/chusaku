@@ -3,6 +3,9 @@ on: [pull_request]
 jobs:
   rubocop:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: ['2.6', '2.7', '3.0']
     steps:
     - uses: actions/checkout@v2
     - name: Set up Ruby
