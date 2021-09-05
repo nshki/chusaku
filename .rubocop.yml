@@ -7,6 +7,9 @@ AllCops:
     - 'test/mock/app/**/*'
     - 'test/mock/examples/**/*'
 
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
 Layout/LineLength:
   Max: 120
 

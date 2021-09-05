@@ -24,7 +24,7 @@ module Chusaku
       controllers_pattern = 'app/controllers/**/*_controller.rb'
 
       Dir.glob(Rails.root.join(controllers_pattern)).each do |path|
-        controller = %r{controllers\/(.*)_controller\.rb}.match(path)[1]
+        controller = %r{controllers/(.*)_controller\.rb}.match(path)[1]
         actions = @routes[controller]
         next if actions.nil?
 
@@ -66,7 +66,7 @@ module Chusaku
 
       group[:body] = group[:body].gsub(/^\s*#\s*@route.*$\n/, '')
       group[:body] =
-        group[:body].gsub(%r{^\s*# (GET|POST|PATCH\/PUT|DELETE) \/\S+$\n}, '')
+        group[:body].gsub(%r{^\s*# (GET|POST|PATCH/PUT|DELETE) /\S+$\n}, '')
     end
 
     # Add an annotation to the given group given by Chusaku::Parser that looks
