@@ -18,6 +18,9 @@ class ParserTest < Minitest::Test
     assert_equal \
       [nil, nil, nil, 'foo', nil],
       (result[:groups].map { |r| r[:action] })
+    assert_equal \
+      [1, 2, 4, 6, 7],
+      (result[:groups].map { |r| r[:line_number] })
   end
 
   def test_empty_file

@@ -41,7 +41,7 @@ module Chusaku
       group = {}
       content = IO.read(path)
 
-      content.each_line do |line|
+      content.each_line.with_index do |line, index|
         parsed_line = parse_line(line: line, actions: actions)
 
         if group[:type] == parsed_line[:type]
@@ -51,7 +51,7 @@ module Chusaku
           # Now looking at a new group. Push the current group onto the array
           # and start a new one.
           groups.push(group) unless group.empty?
-          group = parsed_line
+          group = parsed_line.merge(line_number: index + 1)
         end
       end
 
