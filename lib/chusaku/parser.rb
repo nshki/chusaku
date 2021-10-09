@@ -13,22 +13,26 @@ module Chusaku
     #       {
     #         type: :code,
     #         body: 'class Foo\n',
-    #         action: nil
+    #         action: nil,
+    #         line_number: 1
     #       },
     #       {
     #         type: :comment,
     #         body: '  # Bar\n  # Baz\n',
-    #         action: nil
+    #         action: nil,
+    #         line_number: 2
     #       },
     #       {
     #         type: :action,
     #         body: '  def action_name; end\n',
-    #         action: 'action_name'
+    #         action: 'action_name',
+    #         line_number: 4
     #       }
     #       {
     #         type: :code,
     #         body: 'end # vanilla is the best flavor\n',
-    #         action: nil
+    #         action: nil,
+    #         line_number: 5
     #       }
     #     ]
     #   }
