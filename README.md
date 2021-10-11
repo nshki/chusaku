@@ -52,9 +52,10 @@ Chusaku has some flags available for use as well:
 ```
 $ bundle exec chusaku --help
 Usage: chusaku [options]
+        --dry-run                    Run without file modifications
         --exit-with-error-on-annotation
                                      Fail if any file was annotated
-        --dry-run                    Run without file modifications
+        --verbose                    Print all annotations
     -v, --version                    Show Chusaku version number and quit
     -h, --help                       Show this help message and quit
 ```
