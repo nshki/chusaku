@@ -68,4 +68,14 @@ class Chusaku::CLITest < Minitest::Test
       assert_equal({ error_on_annotation: true }, cli.options)
     end
   end
+
+  def test_verbose_flag
+    cli = Chusaku::CLI.new
+    cli.stub(:check_for_rails_project, nil) do
+      capture_io do
+        assert_equal(0, cli.call(['--verbose']))
+      end
+      assert_equal({ verbose: true }, cli.options)
+    end
+  end
 end
