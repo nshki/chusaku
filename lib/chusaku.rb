@@ -20,7 +20,7 @@ module Chusaku
     def call(flags = {})
       @flags = flags
       @routes = Chusaku::Routes.call
-      @annotated_paths = []
+      @changes = []
       controllers_pattern = 'app/controllers/**/*_controller.rb'
 
       Dir.glob(Rails.root.join(controllers_pattern)).each do |path|
@@ -45,16 +45,44 @@ module Chusaku
     def annotate_file(path:, controller:, actions:)
       parsed_file = Chusaku::Parser.call(path: path, actions: actions)
       parsed_file[:groups].each_cons(2) do |prev, curr|
-        clean_group(prev)
+        record_change(group: prev, type: :clean, path: path)
         next unless curr[:type] == :action
 
         route_data = @routes[controller][curr[:action]]
         next unless route_data.any?
 
-        annotate_group(group: curr, route_data: route_data)
+        record_change(group: curr, type: :annotate, route_data: route_data, path: path)
       end
 
       write_to_file(path: path, parsed_file: parsed_file)
+    end
+
+    # Clean or annotate a group and track the group as changed if applicable.
+    #
+    # @param group [Hash] { type => Symbol, body => String }
+    # @param type [Symbol] [:clean, :annotate]
+    # @param path [String] File path
+    # @param route_data [Array<Hash>] [{
+    #   verb: String,
+    #   path: String,
+    #   name: String }]
+    # @return [void]
+    def record_change(group:, type:, path:, route_data: [])
+      old_body = group[:body]
+
+      case type
+      when :clean
+        clean_group(group)
+      when :annotate
+        annotate_group(group: group, route_data: route_data)
+      end
+      return if old_body == group[:body]
+
+      @changes.push \
+        old_body: old_body,
+        new_body: group[:body],
+        path: path,
+        line_number: group[:line_number]
     end
 
     # Given a parsed group, clean out its contents.
@@ -112,10 +140,9 @@ module Chusaku
     # @return [void]
     def write_to_file(path:, parsed_file:)
       new_content = new_content_for(parsed_file)
-      return unless parsed_file[:content] != new_content
+      return if parsed_file[:content] == new_content
 
       !@flags.include?(:dry) && perform_write(path: path, content: new_content)
-      @annotated_paths.push(path)
     end
 
     # Extracts the new file content for the given parsed file.
@@ -156,7 +183,7 @@ module Chusaku
     def output_results
       puts(output_copy)
       exit_code = 0
-      exit_code = 1 if @annotated_paths.any? && @flags.include?(:error_on_annotation)
+      exit_code = 1 if @changes.any? && @flags.include?(:error_on_annotation)
       exit_code
     end
 
@@ -164,25 +191,36 @@ module Chusaku
     #
     # @return [String] Copy to be outputted to user
     def output_copy
-      return 'Nothing to annotate.' if @annotated_paths.empty?
+      return 'Nothing to annotate.' if @changes.empty?
 
-      annotated_paths = @annotated_paths.join(', ')
-      dry_run = @flags.include?(:dry)
-      error_on_annotation = @flags.include?(:error_on_annotation)
+      copy = changes_copy
+      copy += "\nChusaku has finished running."
+      copy += "\nThis was a dry run so no files were changed." if @flags.include?(:dry)
+      copy += "\nExited with status code 1." if @flags.include?(:error_on_annotation)
+      copy
+    end
 
-      if dry_run && error_on_annotation
-        <<~COPY
-          Annotations missing in the following files: #{annotated_paths}
+    # Returns the copy for recorded changes if `--verbose` flag is passed.
+    #
+    # @return [String] Copy of recorded changes
+    def changes_copy
+      return '' unless @flags.include?(:verbose)
 
-          Run `chusaku` to annotate them. Exiting with status code 1.
-        COPY
-      elsif dry_run
-        "The following files would be annotated without `--dry-run`: #{annotated_paths}"
-      elsif error_on_annotation
-        "Annotated #{annotated_paths}.\n\nExiting with status code 1."
-      else
-        "Annotated #{annotated_paths}."
-      end
+      @changes.map do |change|
+        <<~CHANGE_OUTPUT
+          [#{change[:path]}:#{change[:line_number]}]
+
+          Before:
+          ```ruby
+          #{change[:old_body].chomp}
+          ```
+
+          After:
+          ```ruby
+          #{change[:new_body].chomp}
+          ```
+        CHANGE_OUTPUT
+      end.join("\n")
     end
   end
 end

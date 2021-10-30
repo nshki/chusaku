@@ -54,23 +54,11 @@ module Chusaku
     def optparser
       OptionParser.new do |opts|
         opts.banner = 'Usage: chusaku [options]'
-        add_error_on_annotation_flag(opts)
         add_dry_run_flag(opts)
+        add_error_on_annotation_flag(opts)
+        add_verbose_flag(opts)
         add_version_flag(opts)
         add_help_flag(opts)
-      end
-    end
-
-    # Adds `--exit-with-error-on-annotation` flag.
-    #
-    # @param opts [OptionParser] OptionParser instance
-    # @return [void]
-    def add_error_on_annotation_flag(opts)
-      opts.on(
-        '--exit-with-error-on-annotation',
-        'Fail if any file was annotated'
-      ) do
-        @options[:error_on_annotation] = true
       end
     end
 
@@ -79,11 +67,28 @@ module Chusaku
     # @param opts [OptionParser] OptionParser instance
     # @return [void]
     def add_dry_run_flag(opts)
-      opts.on(
-        '--dry-run',
-        'Run without file modifications'
-      ) do
+      opts.on('--dry-run', 'Run without file modifications') do
         @options[:dry] = true
+      end
+    end
+
+    # Adds `--exit-with-error-on-annotation` flag.
+    #
+    # @param opts [OptionParser] OptionParser instance
+    # @return [void]
+    def add_error_on_annotation_flag(opts)
+      opts.on('--exit-with-error-on-annotation', 'Fail if any file was annotated') do
+        @options[:error_on_annotation] = true
+      end
+    end
+
+    # Adds `--verbose` flag.
+    #
+    # @param opts [OptionParser] OptionParser instance
+    # @return [void]
+    def add_verbose_flag(opts)
+      opts.on('--verbose', 'Print all annotations') do
+        @options[:verbose] = true
       end
     end
 
@@ -92,11 +97,7 @@ module Chusaku
     # @param opts [OptionParser] OptionParser instance
     # @return [void]
     def add_version_flag(opts)
-      opts.on(
-        '-v',
-        '--version',
-        'Show Chusaku version number and quit'
-      ) do
+      opts.on('-v', '--version', 'Show Chusaku version number and quit') do
         puts(Chusaku::VERSION)
         raise Finished
       end
@@ -107,11 +108,7 @@ module Chusaku
     # @param opts [OptionParser] OptionParser instance
     # @return [void]
     def add_help_flag(opts)
-      opts.on(
-        '-h',
-        '--help',
-        'Show this help message and quit'
-      ) do
+      opts.on('-h', '--help', 'Show this help message and quit') do
         puts(opts)
         raise Finished
       end
