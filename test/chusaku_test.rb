@@ -48,12 +48,18 @@ class ChusakuTest < Minitest::Test
       out,
       <<~CHANGES_COPY
         [test/mock/app/controllers/api/tacos_controller.rb:4]
-        ---OLD
+
+        Before:
+        ```ruby
           def show; end
-        ---NEW
+        ```
+
+        After:
+        ```ruby
           # @route GET / (root)
           # @route GET /api/tacos/:id (taco)
           def show; end
+        ```
       CHANGES_COPY
   end
 

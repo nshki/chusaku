@@ -209,12 +209,18 @@ module Chusaku
       @changes.map do |change|
         <<~CHANGE_OUTPUT
           [#{change[:path]}:#{change[:line_number]}]
-          ---OLD
+
+          Before:
+          ```ruby
           #{change[:old_body].chomp}
-          ---NEW
+          ```
+
+          After:
+          ```ruby
           #{change[:new_body].chomp}
+          ```
         CHANGE_OUTPUT
-      end.join
+      end.join("\n")
     end
   end
 end
