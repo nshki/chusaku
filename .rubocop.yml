@@ -1,35 +1,7 @@
-require:
-  - rubocop-performance
+require: standard
 
-inherit_mode:
-  merge:
-    - Exclude
+inherit_gem:
+  standard: config/base.yml
 
 AllCops:
-  NewCops: enable
-  Exclude:
-    - 'bin/**/*'
-    - 'test/mock/app/**/*'
-    - 'test/mock/examples/**/*'
-
-Gemspec/RequiredRubyVersion:
-  Enabled: false
-
-Layout/LineLength:
-  Max: 120
-
-Metrics/AbcSize:
-  Exclude:
-    - 'test/**/*'
-
-Metrics/MethodLength:
-  Max: 25
-  Exclude:
-    - 'test/**/*'
-
-Metrics/ModuleLength:
-  Max: 250
-
-Style/ClassAndModuleChildren:
-  Exclude:
-    - 'test/**/*'
+  DisabledByDefault: true

@@ -86,7 +86,7 @@ module Chusaku
       def format(route:, verb:, defaults:)
         {
           verb: verb,
-          path: route.path.spec.to_s.gsub('(.:format)', ''),
+          path: route.path.spec.to_s.gsub("(.:format)", ""),
           name: route.name,
           defaults: defaults
         }

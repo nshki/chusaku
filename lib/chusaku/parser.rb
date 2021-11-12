@@ -61,7 +61,7 @@ module Chusaku
 
       # Push the last group onto the array and return.
       groups.push(group)
-      { content: content, groups: groups }
+      {content: content, groups: groups}
     end
 
     # Given a line and actions, returns the line's type.
@@ -85,11 +85,11 @@ module Chusaku
       def_match = /^\s*def\s+(\w*)\s*\w*.*$/.match(line)
 
       if !comment_match.nil?
-        { type: :comment, body: line, action: nil }
+        {type: :comment, body: line, action: nil}
       elsif !def_match.nil? && actions.include?(def_match[1])
-        { type: :action, body: line, action: def_match[1] }
+        {type: :action, body: line, action: def_match[1]}
       else
-        { type: :code, body: line, action: nil }
+        {type: :code, body: line, action: nil}
       end
     end
   end

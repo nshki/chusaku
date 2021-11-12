@@ -1,25 +1,25 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 class Chusaku::CLITest < Minitest::Test
   def test_help_flag
     # -h
     out, = capture_io do
-      assert_equal(0, Chusaku::CLI.new.call(['-h']))
+      assert_equal(0, Chusaku::CLI.new.call(["-h"]))
     end
     assert_match(/Show this help message and quit/, out)
 
     # --help
     out, = capture_io do
-      assert_equal(0, Chusaku::CLI.new.call(['--help']))
+      assert_equal(0, Chusaku::CLI.new.call(["--help"]))
     end
     assert_match(/Show this help message and quit/, out)
   end
 
   def test_version_flag
     out, = capture_io do
-      assert_equal(0, Chusaku::CLI.new.call(['-v']))
+      assert_equal(0, Chusaku::CLI.new.call(["-v"]))
     end
     assert_match(/\d+\.\d+\.\d+/, out)
   end
@@ -27,14 +27,14 @@ class Chusaku::CLITest < Minitest::Test
   def test_exit_flag_precedence
     # Passing -v before -h executes -v and exits.
     out, = capture_io do
-      assert_equal(0, Chusaku::CLI.new.call(['-v', '-h']))
+      assert_equal(0, Chusaku::CLI.new.call(["-v", "-h"]))
     end
     assert_match(/\d+\.\d+\.\d+/, out)
     refute_match(/Show this help message and quit/, out)
 
     # Passing -h before -v executes -h and exits.
     out, = capture_io do
-      assert_equal(0, Chusaku::CLI.new.call(['-h', '-v']))
+      assert_equal(0, Chusaku::CLI.new.call(["-h", "-v"]))
     end
     assert_match(/Show this help message and quit/, out)
     refute_match(/\d+\.\d+\.\d+/, out)
@@ -53,9 +53,9 @@ class Chusaku::CLITest < Minitest::Test
     cli = Chusaku::CLI.new
     cli.stub(:check_for_rails_project, nil) do
       capture_io do
-        assert_equal(0, cli.call(['--dry-run']))
+        assert_equal(0, cli.call(["--dry-run"]))
       end
-      assert_equal({ dry: true }, cli.options)
+      assert_equal({dry: true}, cli.options)
     end
   end
 
@@ -63,9 +63,9 @@ class Chusaku::CLITest < Minitest::Test
     cli = Chusaku::CLI.new
     cli.stub(:check_for_rails_project, nil) do
       capture_io do
-        assert_equal(1, cli.call(['--exit-with-error-on-annotation']))
+        assert_equal(1, cli.call(["--exit-with-error-on-annotation"]))
       end
-      assert_equal({ error_on_annotation: true }, cli.options)
+      assert_equal({error_on_annotation: true}, cli.options)
     end
   end
 
@@ -73,9 +73,9 @@ class Chusaku::CLITest < Minitest::Test
     cli = Chusaku::CLI.new
     cli.stub(:check_for_rails_project, nil) do
       capture_io do
-        assert_equal(0, cli.call(['--verbose']))
+        assert_equal(0, cli.call(["--verbose"]))
       end
-      assert_equal({ verbose: true }, cli.options)
+      assert_equal({verbose: true}, cli.options)
     end
   end
 end

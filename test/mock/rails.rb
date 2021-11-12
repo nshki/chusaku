@@ -17,74 +17,74 @@ module Rails
 
       routes.push \
         mock_route \
-          controller: 'api/burritos',
-          action: 'create',
-          verb: 'POST',
-          path: '/api/burritos(.:format)',
-          name: 'burritos'
+          controller: "api/burritos",
+          action: "create",
+          verb: "POST",
+          path: "/api/burritos(.:format)",
+          name: "burritos"
       routes.push \
         mock_route \
-          controller: 'api/tacos',
-          action: 'show',
-          verb: 'GET',
-          path: '/',
-          name: 'root'
+          controller: "api/tacos",
+          action: "show",
+          verb: "GET",
+          path: "/",
+          name: "root"
       routes.push \
         mock_route \
-          controller: 'api/tacos',
-          action: 'create',
-          verb: 'POST',
-          path: '/api/tacos(.:format)',
-          name: 'tacos'
+          controller: "api/tacos",
+          action: "create",
+          verb: "POST",
+          path: "/api/tacos(.:format)",
+          name: "tacos"
       routes.push \
         mock_route \
-          controller: 'api/tacos',
-          action: 'show',
-          verb: 'GET',
-          path: '/api/tacos/:id(.:format)',
-          name: 'taco'
+          controller: "api/tacos",
+          action: "show",
+          verb: "GET",
+          path: "/api/tacos/:id(.:format)",
+          name: "taco"
       routes.push \
         mock_route \
-          controller: 'api/tacos',
-          action: 'update',
+          controller: "api/tacos",
+          action: "update",
           verb: /^PUT|PATCH$/,
-          path: '/api/tacos/:id(.:format)',
+          path: "/api/tacos/:id(.:format)",
           name: nil
       routes.push \
         mock_route \
-          controller: 'api/tacos',
-          action: 'update',
-          verb: 'PUT',
-          path: '/api/tacos/:id(.:format)',
+          controller: "api/tacos",
+          action: "update",
+          verb: "PUT",
+          path: "/api/tacos/:id(.:format)",
           name: nil
       routes.push \
         mock_route \
-          controller: 'waterlilies',
-          action: 'show',
-          verb: 'GET',
-          path: '/waterlilies/:id(.:format)',
-          name: 'waterlilies'
+          controller: "waterlilies",
+          action: "show",
+          verb: "GET",
+          path: "/waterlilies/:id(.:format)",
+          name: "waterlilies"
       routes.push \
         mock_route \
-          controller: 'waterlilies',
-          action: 'show',
-          verb: 'GET',
-          path: '/waterlilies/:id(.:format)',
-          name: 'waterlilies2'
+          controller: "waterlilies",
+          action: "show",
+          verb: "GET",
+          path: "/waterlilies/:id(.:format)",
+          name: "waterlilies2"
       routes.push \
         mock_route \
-          controller: 'waterlilies',
-          action: 'show',
-          verb: 'GET',
-          path: '/waterlilies/:id(.:format)',
-          name: 'waterlilies_blue',
-          defaults: { blue: true }
+          controller: "waterlilies",
+          action: "show",
+          verb: "GET",
+          path: "/waterlilies/:id(.:format)",
+          name: "waterlilies_blue",
+          defaults: {blue: true}
       routes.push \
         mock_route \
-          controller: 'waterlilies',
-          action: 'one_off',
-          verb: 'GET',
-          path: '/one-off',
+          controller: "waterlilies",
+          action: "one_off",
+          verb: "GET",
+          path: "/one-off",
           name: nil
 
       app = Minitest::Mock.new
@@ -101,7 +101,7 @@ module Rails
       rails_root = Minitest::Mock.new
       rails_root.expect \
         :join,
-        'test/mock/app/controllers/**/*_controller.rb',
+        "test/mock/app/controllers/**/*_controller.rb",
         [String]
       rails_root
     end
@@ -118,7 +118,6 @@ module Rails
     # @param defaults [Hash] Mocked default params
     # @return [Minitest::Mock] Mocked route
     #
-    # rubocop:disable Metrics/ParameterLists
     def mock_route(controller:, action:, verb:, path:, name:, defaults: {})
       route = Minitest::Mock.new
       route.expect(:defaults, controller: controller, action: action, **defaults)
@@ -135,6 +134,5 @@ module Rails
 
       route
     end
-    # rubocop:enable Metrics/ParameterLists
   end
 end

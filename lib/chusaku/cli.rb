@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'optparse'
-require 'chusaku'
+require "optparse"
+require "chusaku"
 
 module Chusaku
   # Enables flags for the `chusaku` executable.
@@ -30,7 +30,7 @@ module Chusaku
       check_for_rails_project
       Chusaku.call(options)
     rescue NotARailsProject
-      warn('Please run chusaku from the root of your project.')
+      warn("Please run chusaku from the root of your project.")
       STATUS_ERROR
     rescue Finished
       STATUS_SUCCESS
@@ -43,8 +43,8 @@ module Chusaku
     # @raise [Chusaku::CLI::NotARailsProject] Exception if not Rails project
     # @return [void]
     def check_for_rails_project
-      has_controllers = File.directory?('./app/controllers')
-      has_rakefile = File.exist?('./Rakefile')
+      has_controllers = File.directory?("./app/controllers")
+      has_rakefile = File.exist?("./Rakefile")
       raise NotARailsProject unless has_controllers && has_rakefile
     end
 
@@ -53,7 +53,7 @@ module Chusaku
     # @return [OptionParser] Preconfigured OptionParser instance
     def optparser
       OptionParser.new do |opts|
-        opts.banner = 'Usage: chusaku [options]'
+        opts.banner = "Usage: chusaku [options]"
         add_dry_run_flag(opts)
         add_error_on_annotation_flag(opts)
         add_verbose_flag(opts)
@@ -67,7 +67,7 @@ module Chusaku
     # @param opts [OptionParser] OptionParser instance
     # @return [void]
     def add_dry_run_flag(opts)
-      opts.on('--dry-run', 'Run without file modifications') do
+      opts.on("--dry-run", "Run without file modifications") do
         @options[:dry] = true
       end
     end
@@ -77,7 +77,7 @@ module Chusaku
     # @param opts [OptionParser] OptionParser instance
     # @return [void]
     def add_error_on_annotation_flag(opts)
-      opts.on('--exit-with-error-on-annotation', 'Fail if any file was annotated') do
+      opts.on("--exit-with-error-on-annotation", "Fail if any file was annotated") do
         @options[:error_on_annotation] = true
       end
     end
@@ -87,7 +87,7 @@ module Chusaku
     # @param opts [OptionParser] OptionParser instance
     # @return [void]
     def add_verbose_flag(opts)
-      opts.on('--verbose', 'Print all annotations') do
+      opts.on("--verbose", "Print all annotations") do
         @options[:verbose] = true
       end
     end
@@ -97,7 +97,7 @@ module Chusaku
     # @param opts [OptionParser] OptionParser instance
     # @return [void]
     def add_version_flag(opts)
-      opts.on('-v', '--version', 'Show Chusaku version number and quit') do
+      opts.on("-v", "--version", "Show Chusaku version number and quit") do
         puts(Chusaku::VERSION)
         raise Finished
       end
@@ -108,7 +108,7 @@ module Chusaku
     # @param opts [OptionParser] OptionParser instance
     # @return [void]
     def add_help_flag(opts)
-      opts.on('-h', '--help', 'Show this help message and quit') do
+      opts.on("-h", "--help", "Show this help message and quit") do
         puts(opts)
         raise Finished
       end
