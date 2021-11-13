@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file overrides Rails methods such that we can test without installing
 # multiple versions of Rails in the test suite. If different versions of Rails
 # begin treating route generation differently, new overrides should be written

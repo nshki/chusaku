@@ -77,8 +77,6 @@ class ChusakuTest < Minitest::Test
 
     expected =
       <<~HEREDOC
-        # frozen_string_literal: true
-
         class TacosController < ApplicationController
           # @route GET / (root)
           # @route GET /api/tacos/:id (taco)
@@ -115,8 +113,6 @@ class ChusakuTest < Minitest::Test
 
     expected =
       <<~HEREDOC
-        # frozen_string_literal: true
-
         class WaterliliesController < ApplicationController
           # @route GET /waterlilies/:id (waterlilies)
           # @route GET /waterlilies/:id (waterlilies2)

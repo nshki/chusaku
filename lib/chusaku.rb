@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require "chusaku/version"
 require "chusaku/parser"
 require "chusaku/routes"

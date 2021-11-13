@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Chusaku
   # Handles extracting information about the Rails project's routes.
   class Routes
