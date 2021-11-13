@@ -9,18 +9,18 @@ module Chusaku
       # Example output:
       #
       #   {
-      #     'users' => {
-      #       'edit' => [
-      #         { verb: 'GET', path: '/users/:id', name: 'edit_user' }
+      #     "users" => {
+      #       "edit" => [
+      #         {verb: "GET", path: "/users/:id", name: "edit_user"}
       #       ],
-      #       'update' => [
-      #         { verb: 'PATCH', path: '/users', name: 'edit_user' },
-      #         { verb: 'PUT', path: '/users', name: 'edit_user' }
+      #       "update" => [
+      #         {verb: "PATCH", path: "/users", name: "edit_user"},
+      #         {verb: "PUT", path: "/users", name: "edit_user"}
       #       ]
       #     },
-      #     'empanadas' => {
-      #       'create' => [
-      #         { verb: 'POST', path: '/empanadas', name: nil }
+      #     "empanadas" => {
+      #       "create" => [
+      #         {verb: "POST", path: "/empanadas", name: nil}
       #       ]
       #     }
       #   }

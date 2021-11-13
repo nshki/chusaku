@@ -1,19 +1,19 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
+require "rubygems"
 
 begin
   # Use project's bundle.
-  require 'bundler'
+  require "bundler"
   Bundler.setup
 
   # Use project's environment.
-  require 'rake'
-  load './Rakefile'
+  require "rake"
+  load "./Rakefile"
   Rake::Task[:environment].invoke
-rescue StandardError
+rescue
 end
 
-require 'chusaku/cli'
+require "chusaku/cli"
 
 exit Chusaku::CLI.new.call
