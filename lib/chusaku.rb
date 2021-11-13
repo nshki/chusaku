@@ -1,8 +1,6 @@
-# frozen_string_literal: true
-
-require 'chusaku/version'
-require 'chusaku/parser'
-require 'chusaku/routes'
+require "chusaku/version"
+require "chusaku/parser"
+require "chusaku/routes"
 
 # Handles core functionality of annotating projects.
 module Chusaku
@@ -21,7 +19,7 @@ module Chusaku
       @flags = flags
       @routes = Chusaku::Routes.call
       @changes = []
-      controllers_pattern = 'app/controllers/**/*_controller.rb'
+      controllers_pattern = "app/controllers/**/*_controller.rb"
 
       Dir.glob(Rails.root.join(controllers_pattern)).each do |path|
         controller = %r{controllers/(.*)_controller\.rb}.match(path)[1]
@@ -92,9 +90,9 @@ module Chusaku
     def clean_group(group)
       return unless group[:type] == :comment
 
-      group[:body] = group[:body].gsub(/^\s*#\s*@route.*$\n/, '')
+      group[:body] = group[:body].gsub(/^\s*#\s*@route.*$\n/, "")
       group[:body] =
-        group[:body].gsub(%r{^\s*# (GET|POST|PATCH/PUT|DELETE) /\S+$\n}, '')
+        group[:body].gsub(%r{^\s*# (GET|POST|PATCH/PUT|DELETE) /\S+$\n}, "")
     end
 
     # Add an annotation to the given group given by Chusaku::Parser that looks
@@ -125,8 +123,8 @@ module Chusaku
       if defaults&.any?
         defaults_str =
           defaults
-          .map { |key, value| "#{key}: #{value.inspect}" }
-          .join(', ')
+            .map { |key, value| "#{key}: #{value.inspect}" }
+            .join(", ")
         annotation += " {#{defaults_str}}"
       end
       annotation += " (#{name})" unless name.nil?
@@ -174,7 +172,7 @@ module Chusaku
     #
     # @return [String] 'r' or 'w'
     def file_mode
-      File.instance_methods.include?(:test_write) ? 'r' : 'w'
+      File.instance_methods.include?(:test_write) ? "r" : "w"
     end
 
     # Output results to user.
@@ -191,7 +189,7 @@ module Chusaku
     #
     # @return [String] Copy to be outputted to user
     def output_copy
-      return 'Nothing to annotate.' if @changes.empty?
+      return "Nothing to annotate." if @changes.empty?
 
       copy = changes_copy
       copy += "\nChusaku has finished running."
@@ -204,7 +202,7 @@ module Chusaku
     #
     # @return [String] Copy of recorded changes
     def changes_copy
-      return '' unless @flags.include?(:verbose)
+      return "" unless @flags.include?(:verbose)
 
       @changes.map do |change|
         <<~CHANGE_OUTPUT

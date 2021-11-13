@@ -1,13 +1,11 @@
-# frozen_string_literal: true
-
 module Example
   # a
   # b
   def foo
-    puts 'hello world!'
+    puts "hello world!"
   end
 
   def bar # a
-    puts 'ice cream'
+    puts "ice cream"
   end
 end

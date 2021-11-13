@@ -27,7 +27,7 @@ Add this line to your Rails application's Gemfile:
 ```ruby
 group :development do
   # ...
-  gem 'chusaku', require: false
+  gem "chusaku", require: false
   # ...
 end
 ```

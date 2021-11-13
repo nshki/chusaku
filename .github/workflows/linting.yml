@@ -1,18 +1,14 @@
 name: Linting
 on: [pull_request]
 jobs:
-  rubocop:
+  standard:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@473e4d8fe5dd94ee328fdfca9f8c9c7afc9dae5e
-      with:
-        ruby-version: 3.0.0
-        bundler-cache: true
-    - name: Run RuboCop
-      uses: reviewdog/action-rubocop@v2
-      with:
-        rubocop_version: gemfile
-        github_token: ${{ secrets.github_token }}
-        reporter: github-pr-review
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@473e4d8fe5dd94ee328fdfca9f8c9c7afc9dae5e
+        with:
+          ruby-version: 3.0.0
+          bundler-cache: true
+      - name: Run Standard
+        run: bundle exec standardrb --fail-level A

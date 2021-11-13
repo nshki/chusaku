@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Chusaku
   # Handles extracting information about the Rails project's routes.
   class Routes
@@ -9,18 +7,18 @@ module Chusaku
       # Example output:
       #
       #   {
-      #     'users' => {
-      #       'edit' => [
-      #         { verb: 'GET', path: '/users/:id', name: 'edit_user' }
+      #     "users" => {
+      #       "edit" => [
+      #         {verb: "GET", path: "/users/:id", name: "edit_user"}
       #       ],
-      #       'update' => [
-      #         { verb: 'PATCH', path: '/users', name: 'edit_user' },
-      #         { verb: 'PUT', path: '/users', name: 'edit_user' }
+      #       "update" => [
+      #         {verb: "PATCH", path: "/users", name: "edit_user"},
+      #         {verb: "PUT", path: "/users", name: "edit_user"}
       #       ]
       #     },
-      #     'empanadas' => {
-      #       'create' => [
-      #         { verb: 'POST', path: '/empanadas', name: nil }
+      #     "empanadas" => {
+      #       "create" => [
+      #         {verb: "POST", path: "/empanadas", name: nil}
       #       ]
       #     }
       #   }
@@ -86,7 +84,7 @@ module Chusaku
       def format(route:, verb:, defaults:)
         {
           verb: verb,
-          path: route.path.spec.to_s.gsub('(.:format)', ''),
+          path: route.path.spec.to_s.gsub("(.:format)", ""),
           name: route.name,
           defaults: defaults
         }
