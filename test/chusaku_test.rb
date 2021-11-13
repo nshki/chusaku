@@ -2,7 +2,6 @@ require_relative "test_helper"
 
 class ChusakuTest < Minitest::Test
   def test_dry_run_flag
-    File.reset_mock
     exit_code = 0
 
     out, _err = capture_io { exit_code = Chusaku.call(dry: true) }
@@ -13,7 +12,6 @@ class ChusakuTest < Minitest::Test
   end
 
   def test_exit_with_error_on_annotation_flag
-    File.reset_mock
     exit_code = 0
 
     out, _err = capture_io { exit_code = Chusaku.call(error_on_annotation: true) }
@@ -24,7 +22,6 @@ class ChusakuTest < Minitest::Test
   end
 
   def test_dry_run_and_exit_with_error_flag
-    File.reset_mock
     exit_code = 0
 
     out, _err = capture_io { exit_code = Chusaku.call(dry: true, error_on_annotation: true) }
@@ -36,7 +33,6 @@ class ChusakuTest < Minitest::Test
   end
 
   def test_verbose_flag
-    File.reset_mock
     exit_code = 0
 
     out, _err = capture_io { exit_code = Chusaku.call(verbose: true) }
@@ -62,7 +58,6 @@ class ChusakuTest < Minitest::Test
   end
 
   def test_mock_app
-    File.reset_mock
     exit_code = 0
 
     capture_io { exit_code = Chusaku.call }
@@ -124,5 +119,16 @@ class ChusakuTest < Minitest::Test
         end
       HEREDOC
     assert_equal(expected, files["#{base_path}/waterlilies_controller.rb"])
+  end
+
+  def test_mock_app_with_no_pending_annotations
+    Rails.set_route_allowlist(["api/burritos#create"])
+    exit_code = 0
+
+    out, _err = capture_io { exit_code = Chusaku.call }
+
+    assert_equal(0, exit_code)
+    assert_empty(File.written_files)
+    assert_equal("Nothing to annotate.\n", out)
   end
 end

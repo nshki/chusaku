@@ -87,12 +87,20 @@ module Rails
 
       app = Minitest::Mock.new
       app_routes = Minitest::Mock.new
-      app_routes.expect(:routes, routes)
+      app_routes.expect(:routes, routes.compact)
       app.expect(:routes, app_routes)
       app
     end
 
-    # Lets us call `Rails.root` without an skeleton Rails app.
+    # Define an allowlist of controller/actions that will be mocked.
+    #
+    # @param route_allowlist [Array<String>] In format "controller#action"
+    # @return [void]
+    def set_route_allowlist(route_allowlist)
+      @@route_allowlist = route_allowlist
+    end
+
+    # Lets us call `Rails.root` without a skeleton Rails app.
     #
     # @return [Minitest::Mock] Mocked `Rails.root`
     def root
@@ -114,9 +122,11 @@ module Rails
     # @param path [String] Mocked Rails path
     # @param name [String] Mocked route name
     # @param defaults [Hash] Mocked default params
-    # @return [Minitest::Mock] Mocked route
-    #
+    # @return [Minitest::Mock, nil] Mocked route
     def mock_route(controller:, action:, verb:, path:, name:, defaults: {})
+      @@route_allowlist ||= []
+      return if @@route_allowlist.any? && @@route_allowlist.index("#{controller}##{action}").nil?
+
       route = Minitest::Mock.new
       route.expect(:defaults, controller: controller, action: action, **defaults)
       route.expect(:verb, verb)
