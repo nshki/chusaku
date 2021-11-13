@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require_relative "test_helper"
 
 class ChusakuTest < Minitest::Test
   def test_dry_run_flag
@@ -51,14 +51,14 @@ class ChusakuTest < Minitest::Test
 
         Before:
         ```ruby
-          def show; end
+          def show
         ```
 
         After:
         ```ruby
           # @route GET / (root)
           # @route GET /api/tacos/:id (taco)
-          def show; end
+          def show
         ```
       CHANGES_COPY
   end
@@ -82,30 +82,33 @@ class ChusakuTest < Minitest::Test
         class TacosController < ApplicationController
           # @route GET / (root)
           # @route GET /api/tacos/:id (taco)
-          def show; end
+          def show
+          end
 
           # This is an example of generated annotations that come with Rails 6
           # scaffolds. These should be replaced by Chusaku annotations.
           # @route POST /api/tacos (tacos)
-          def create; end
+          def create
+          end
 
           # Update all the tacos!
           # We should not see a duplicate @route in this comment block.
           # But this should remain (@route), because it's just words.
           # @route PUT /api/tacos/:id (taco)
           # @route PATCH /api/tacos/:id (taco)
-          def update; end
+          def update
+          end
 
           # This route doesn't exist, so it should be deleted.
           def destroy
-            puts('Tacos are indestructible')
+            puts("Tacos are indestructible")
           end
 
           private
 
-            def tacos_params
-              params.require(:tacos).permit(:carnitas)
-            end
+          def tacos_params
+            params.require(:tacos).permit(:carnitas)
+          end
         end
       HEREDOC
     assert_equal(expected, files["#{base_path}/api/tacos_controller.rb"])
@@ -118,10 +121,12 @@ class ChusakuTest < Minitest::Test
           # @route GET /waterlilies/:id (waterlilies)
           # @route GET /waterlilies/:id (waterlilies2)
           # @route GET /waterlilies/:id {blue: true} (waterlilies_blue)
-          def show; end
+          def show
+          end
 
           # @route GET /one-off
-          def one_off; end
+          def one_off
+          end
         end
       HEREDOC
     assert_equal(expected, files["#{base_path}/waterlilies_controller.rb"])

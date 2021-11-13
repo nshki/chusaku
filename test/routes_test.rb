@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "test_helper"
+require_relative "test_helper"
 
 class RoutesTest < Minitest::Test
   def test_mock_rails
