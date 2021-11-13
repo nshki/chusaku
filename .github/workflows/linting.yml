@@ -1,7 +1,7 @@
 name: Linting
 on: [pull_request]
 jobs:
-  rubocop:
+  standard:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
