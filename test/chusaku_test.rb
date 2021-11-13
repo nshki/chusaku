@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require_relative "test_helper"
 
 class ChusakuTest < Minitest::Test
@@ -47,7 +45,7 @@ class ChusakuTest < Minitest::Test
     assert_includes \
       out,
       <<~CHANGES_COPY
-        [test/mock/app/controllers/api/tacos_controller.rb:4]
+        [test/mock/app/controllers/api/tacos_controller.rb:2]
 
         Before:
         ```ruby

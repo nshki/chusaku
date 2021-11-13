@@ -6,18 +6,18 @@ class ParserTest < Minitest::Test
       path: "#{__dir__}/mock/examples/example.rb",
       actions: %w[foo]
 
-    assert_equal(5, result[:groups].size)
+    assert_equal(4, result[:groups].size)
     assert_equal \
-      %i[comment code comment action code],
+      %i[code comment action code],
       (result[:groups].map { |r| r[:type] })
     assert_equal \
       File.read("#{__dir__}/mock/examples/example.rb"),
       result[:groups].map { |r| r[:body] }.join
     assert_equal \
-      [nil, nil, nil, "foo", nil],
+      [nil, nil, "foo", nil],
       (result[:groups].map { |r| r[:action] })
     assert_equal \
-      [1, 2, 4, 6, 7],
+      [1, 2, 4, 5],
       (result[:groups].map { |r| r[:line_number] })
   end
 
