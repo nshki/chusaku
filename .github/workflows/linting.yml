@@ -11,4 +11,4 @@ jobs:
           ruby-version: 3.0.0
           bundler-cache: true
       - name: Run Standard
-        run: bundle exec standardrb --fail-level E
+        run: bundle exec standardrb --fail-level A
