@@ -19,6 +19,7 @@ module Chusaku
       @flags = flags
       @routes = Chusaku::Routes.call
       @changes = []
+      @changed_files = []
       controllers_pattern = "app/controllers/**/*_controller.rb"
 
       Dir.glob(Rails.root.join(controllers_pattern)).each do |path|
@@ -141,6 +142,7 @@ module Chusaku
       return if parsed_file[:content] == new_content
 
       !@flags.include?(:dry) && perform_write(path: path, content: new_content)
+      @changed_files.push(path)
     end
 
     # Extracts the new file content for the given parsed file.
@@ -181,7 +183,7 @@ module Chusaku
     def output_results
       puts(output_copy)
       exit_code = 0
-      exit_code = 1 if @changes.any? && @flags.include?(:error_on_annotation)
+      exit_code = 1 if @changed_files.any? && @flags.include?(:error_on_annotation)
       exit_code
     end
 
@@ -189,7 +191,7 @@ module Chusaku
     #
     # @return [String] Copy to be outputted to user
     def output_copy
-      return "Nothing to annotate." if @changes.empty?
+      return "Nothing to annotate." if @changed_files.empty?
 
       copy = changes_copy
       copy += "\nChusaku has finished running."
