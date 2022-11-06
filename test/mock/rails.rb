@@ -128,7 +128,7 @@ module Rails
       return if @@route_allowlist.any? && @@route_allowlist.index("#{controller}##{action}").nil?
 
       route = Minitest::Mock.new
-      route.expect(:defaults, controller: controller, action: action, **defaults)
+      route.expect(:defaults, {controller: controller, action: action, **defaults})
       route.expect(:verb, verb)
       route_path = Minitest::Mock.new
 
