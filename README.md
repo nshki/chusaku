@@ -61,21 +61,6 @@ Usage: chusaku [options]
 ```
 
 
-## Pre-commit Hook
-
-Here's an example setup that you could use for automating Chusaku as a Git hook
-with the [Lefthook](https://github.com/Arkweid/lefthook) gem.
-
-```yaml
-pre-commit:
-  commands:
-    chusaku:
-      run: eval "! git diff --staged --name-only | grep -q 'routes.rb' && exit 0 || bundle exec chusaku --exit-with-error-on-annotation"
-```
-
-This example config only runs Chusaku if `routes.rb` was modified.
-
-
 ## Development
 
 Read the blog post explaining how the gem works at a high level:
