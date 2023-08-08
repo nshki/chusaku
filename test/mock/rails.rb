@@ -22,6 +22,20 @@ module Rails
           name: "burritos"
       routes.push \
         mock_route \
+          controller: "api/cakes",
+          action: "inherit",
+          verb: "GET",
+          path: "/api/cakes/inherit(.:format)",
+          name: nil
+      routes.push \
+        mock_route \
+          controller: "api/cakes",
+          action: "inherit",
+          verb: "PUT",
+          path: "/api/cakes/inherit(.:format)",
+          name: "inherit"
+      routes.push \
+        mock_route \
           controller: "api/tacos",
           action: "show",
           verb: "GET",

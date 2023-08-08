@@ -9,6 +9,12 @@ class RoutesTest < Minitest::Test
             {verb: "POST", path: "/api/burritos", name: "burritos", defaults: {}}
           ]
         },
+        "api/cakes" => {
+          "inherit" => [
+            {verb: "GET", path: "/api/cakes/inherit", name: "inherit", defaults: {}},
+            {verb: "PUT", path: "/api/cakes/inherit", name: "inherit", defaults: {}}
+          ]
+        },
         "api/tacos" => {
           "show" => [
             {verb: "GET", path: "/", name: "root", defaults: {}},

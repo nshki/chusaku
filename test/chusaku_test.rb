@@ -17,7 +17,7 @@ class ChusakuTest < Minitest::Test
     out, _err = capture_io { exit_code = Chusaku.call(error_on_annotation: true) }
 
     assert_equal(1, exit_code)
-    assert_equal(2, File.written_files.count)
+    assert_equal(3, File.written_files.count)
     assert_includes(out, "Exited with status code 1.")
   end
 
@@ -67,6 +67,19 @@ class ChusakuTest < Minitest::Test
     assert_equal(0, exit_code)
     assert(2, files.count)
     refute_includes(files, "#{base_path}/api/burritos_controller.rb")
+
+    expected =
+      <<~HEREDOC
+        class CakesController < ApplicationController
+          # This route's GET action should be named the same as its PUT action,
+          # even though only the PUT action is named.
+          # @route GET /api/cakes/inherit (inherit)
+          # @route PUT /api/cakes/inherit (inherit)
+          def inherit
+          end
+        end
+      HEREDOC
+    assert_equal(expected, files["#{base_path}/api/cakes_controller.rb"])
 
     expected =
       <<~HEREDOC
