@@ -98,11 +98,36 @@ module Chusaku
       def backfill_routes(routes)
         paths = {}
 
+        # Map paths to their verbs and names.
+        #
+        # Resulting hash looks like:
+        #
+        # ```ruby
+        # {
+        #   "/users/:id" => {
+        #     "GET" => "edit_user",
+        #     "PATCH" => "edit_user"
+        #   }
+        # }
+        # ````
         routes.each do |_controller, actions|
           actions.each do |_action, data|
             data.each do |datum|
-              paths[datum[:path]] ||= datum[:name]
-              datum[:name] ||= paths[datum[:path]]
+              paths[datum[:path]] ||= {}
+              paths[datum[:path]][datum[:verb]] ||= datum[:name]
+            end
+          end
+        end
+
+        # Backfill names for routes that don't have them.
+        #
+        # First try to match based on the path and verb. If that doesn't work,
+        # try to match based on the path alone.
+        routes.each do |_controller, actions|
+          actions.each do |_action, data|
+            data.each do |datum|
+              datum[:name] ||= paths.dig(datum[:path], datum[:verb])
+              datum[:name] ||= paths[datum[:path]]&.values&.compact&.first
             end
           end
         end
