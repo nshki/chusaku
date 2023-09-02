@@ -55,6 +55,7 @@ module Chusaku
         opts.set_summary_width(35)
         add_dry_run_flag(opts)
         add_error_on_annotation_flag(opts)
+        add_controllers_pattern_flag(opts)
         add_verbose_flag(opts)
         add_version_flag(opts)
         add_help_flag(opts)
@@ -78,6 +79,16 @@ module Chusaku
     def add_error_on_annotation_flag(opts)
       opts.on("--exit-with-error-on-annotation", "Fail if any file was annotated") do
         @options[:error_on_annotation] = true
+      end
+    end
+
+    # Adds `--controllers-pattern` flag.
+    #
+    # @param opts [OptionParser] OptionParser instance
+    # @return [void]
+    def add_controllers_pattern_flag(opts)
+      opts.on("-c", "--controllers-pattern", "=GLOB", "Specify alternative controller files glob pattern") do |value|
+        @options[:controllers_pattern] = value
       end
     end
 
