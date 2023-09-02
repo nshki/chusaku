@@ -52,6 +52,7 @@ module Chusaku
     def optparser
       OptionParser.new do |opts|
         opts.banner = "Usage: chusaku [options]"
+        opts.set_summary_width(35)
         add_dry_run_flag(opts)
         add_error_on_annotation_flag(opts)
         add_verbose_flag(opts)
