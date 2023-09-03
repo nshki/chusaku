@@ -65,7 +65,7 @@ class ChusakuTest < Minitest::Test
     base_path = "test/mock/app/controllers"
 
     assert_equal(0, exit_code)
-    assert(2, files.count)
+    assert_equal(3, files.count)
     refute_includes(files, "#{base_path}/api/burritos_controller.rb")
 
     expected =
