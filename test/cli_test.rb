@@ -76,4 +76,24 @@ class Chusaku::CLITest < Minitest::Test
       assert_equal({verbose: true}, cli.options)
     end
   end
+
+  def test_controllers_pattern_flag
+    # --controllers-pattern
+    cli = Chusaku::CLI.new
+    cli.stub(:check_for_rails_project, nil) do
+      capture_io do
+        assert_equal(0, cli.call(["--controllers-pattern=**/controllers/**/*_controller.rb"]))
+      end
+      assert_equal({controllers_pattern: "**/controllers/**/*_controller.rb"}, cli.options)
+    end
+
+    # -c
+    cli = Chusaku::CLI.new
+    cli.stub(:check_for_rails_project, nil) do
+      capture_io do
+        assert_equal(0, cli.call(["-c", "**/controllers/**/*_controller.rb"]))
+      end
+      assert_equal({controllers_pattern: "**/controllers/**/*_controller.rb"}, cli.options)
+    end
+  end
 end

@@ -4,6 +4,9 @@
 # for each version.
 #
 # The mocks used should reflect the files located in `test/mock/app/`.
+
+require "pathname"
+
 module Rails
   class << self
     # Lets us call `Rails.application.routes.routes` without a skeleton Rails
@@ -116,14 +119,9 @@ module Rails
 
     # Lets us call `Rails.root` without a skeleton Rails app.
     #
-    # @return [Minitest::Mock] Mocked `Rails.root`
+    # @return [Pathname] Pathname object like Rails.root
     def root
-      rails_root = Minitest::Mock.new
-      rails_root.expect \
-        :join,
-        "test/mock/app/controllers/**/*_controller.rb",
-        [String]
-      rails_root
+      Pathname.new("test/mock")
     end
 
     private
