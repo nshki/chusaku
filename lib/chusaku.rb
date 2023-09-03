@@ -20,7 +20,7 @@ module Chusaku
       @routes = Chusaku::Routes.call
       @changes = []
       @changed_files = []
-      controllers_pattern = "app/controllers/**/*_controller.rb"
+      controllers_pattern = @flags[:controllers_pattern] || "app/controllers/**/*_controller.rb"
 
       Dir.glob(Rails.root.join(controllers_pattern)).each do |path|
         controller = %r{controllers/(.*)_controller\.rb}.match(path)[1]

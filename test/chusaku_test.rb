@@ -144,4 +144,15 @@ class ChusakuTest < Minitest::Test
     assert_empty(File.written_files)
     assert_equal("Nothing to annotate.\n", out)
   end
+
+  def test_mock_app_with_non_matching_controllers_pattern
+    exit_code = 0
+
+    args = {controllers_pattern: "**/nomatch/*_controller.rb"}
+    out, = capture_io { exit_code = Chusaku.call(args) }
+
+    assert_equal(0, exit_code)
+    assert_empty(File.written_files)
+    assert_equal("Nothing to annotate.\n", out)
+  end
 end
