@@ -26,7 +26,7 @@ Add this line to your Rails application's Gemfile:
 
 ```ruby
 group :development do
-  gem "chusaku"
+  gem "chusaku", require: false
 end
 ```
 
@@ -64,6 +64,7 @@ Usage: chusaku [options]
 If you'd like to use Chusaku as a Rake task, add the following line to your `Rakefile`:
 
 ```ruby
+require "chusaku"
 Chusaku.load_tasks
 ```
 
