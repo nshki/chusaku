@@ -33,6 +33,15 @@ module Chusaku
       output_results
     end
 
+    # Load Rake tasks for Chusaku. Should be called in your project's `Rakefile`.
+    #
+    # @return [void]
+    def load_tasks
+      Dir[File.join(File.dirname(__FILE__), "tasks", "**/*.rake")].each do |task|
+        load(task)
+      end
+    end
+
     private
 
     # Adds annotations to the given file.

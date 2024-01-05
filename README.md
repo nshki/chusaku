@@ -26,16 +26,14 @@ Add this line to your Rails application's Gemfile:
 
 ```ruby
 group :development do
-  # ...
   gem "chusaku", require: false
-  # ...
 end
 ```
 
 And then execute:
 
-```
-$ bundle install
+```sh
+bundle install
 ```
 
 
@@ -43,8 +41,8 @@ $ bundle install
 
 From the root of your Rails application, run:
 
-```
-$ bundle exec chusaku
+```sh
+bundle exec chusaku
 ```
 
 Chusaku has some flags available for use as well:
@@ -61,17 +59,32 @@ Usage: chusaku [options]
 
 ```
 
+### Rake usage
+
+If you'd like to use Chusaku as a Rake task, add the following line to your `Rakefile`:
+
+```ruby
+require "chusaku"
+Chusaku.load_tasks
+```
+
+This will then allow you to call:
+
+```sh
+bin/rake chusaku
+```
+
+To pass flags, pass them like you would from the CLI executable:
+
+```sh
+bin/rake chusaku -- --dry-run --exit-with-error-on-annotation
+```
+
 
 ## Development
 
-Read the blog post explaining how the gem works at a high level:
-https://nshki.com/chusaku-a-controller-annotation-gem.
+Read the blog post explaining how the gem works at a high level: https://nshki.com/chusaku-a-controller-annotation-gem.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run
-`bundle exec rake test` to run the tests. You can also run `bin/console` for an
-interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `bundle exec rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To release a new version, update the version number in `version.rb`, and then
-run `bundle exec rake release`, which will create a git tag for the version,
-git commits and tags, and push the `.gem` file to
-[rubygems.org](https://rubygems.org).
+To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
