@@ -4,5 +4,5 @@ desc "Add route annotations to your Rails actions"
 task chusaku: :environment do
   require "#{chusaku_lib}/chusaku/cli"
 
-  Chusaku::CLI.new.call(ARGV[2...])
+  Chusaku::CLI.new.call(ARGV[2...] || [])
 end
