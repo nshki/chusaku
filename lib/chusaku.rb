@@ -200,10 +200,10 @@ module Chusaku
     #
     # @return [String] Copy to be outputted to user
     def output_copy
-      return "Nothing to annotate." if @changed_files.empty?
+      return "Controller files unchanged." if @changed_files.empty?
 
       copy = changes_copy
-      copy += "\nChusaku has finished running."
+      copy += "Chusaku has finished running."
       copy += "\nThis was a dry run so no files were changed." if @flags.include?(:dry)
       copy += "\nExited with status code 1." if @flags.include?(:error_on_annotation)
       copy
@@ -229,7 +229,7 @@ module Chusaku
           #{change[:new_body].chomp}
           ```
         CHANGE_OUTPUT
-      end.join("\n")
+      end.join("\n") + "\n"
     end
   end
 end

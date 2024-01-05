@@ -142,7 +142,7 @@ class ChusakuTest < Minitest::Test
 
     assert_equal(0, exit_code)
     assert_empty(File.written_files)
-    assert_equal("Nothing to annotate.\n", out)
+    assert_equal("Controller files unchanged.\n", out)
   end
 
   def test_mock_app_with_non_matching_controllers_pattern
@@ -153,6 +153,6 @@ class ChusakuTest < Minitest::Test
 
     assert_equal(0, exit_code)
     assert_empty(File.written_files)
-    assert_equal("Nothing to annotate.\n", out)
+    assert_equal("Controller files unchanged.\n", out)
   end
 end
