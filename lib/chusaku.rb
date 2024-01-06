@@ -18,7 +18,6 @@ module Chusaku
     def call(flags = {})
       @flags = flags
       @routes = Chusaku::Routes.call
-      @changes = []
       @changed_files = []
       controllers_pattern = @flags[:controllers_pattern] || "app/controllers/**/*_controller.rb"
 
@@ -53,44 +52,16 @@ module Chusaku
     def annotate_file(path:, controller:, actions:)
       parsed_file = Chusaku::Parser.call(path: path, actions: actions)
       parsed_file[:groups].each_cons(2) do |prev, curr|
-        record_change(group: prev, type: :clean, path: path)
+        clean_group(prev)
         next unless curr[:type] == :action
 
         route_data = @routes[controller][curr[:action]]
         next unless route_data.any?
 
-        record_change(group: curr, type: :annotate, route_data: route_data, path: path)
+        annotate_group(group: curr, route_data: route_data)
       end
 
       write_to_file(path: path, parsed_file: parsed_file)
-    end
-
-    # Clean or annotate a group and track the group as changed if applicable.
-    #
-    # @param group [Hash] { type => Symbol, body => String }
-    # @param type [Symbol] [:clean, :annotate]
-    # @param path [String] File path
-    # @param route_data [Array<Hash>] [{
-    #   verb: String,
-    #   path: String,
-    #   name: String }]
-    # @return [void]
-    def record_change(group:, type:, path:, route_data: [])
-      old_body = group[:body]
-
-      case type
-      when :clean
-        clean_group(group)
-      when :annotate
-        annotate_group(group: group, route_data: route_data)
-      end
-      return if old_body == group[:body]
-
-      @changes.push \
-        old_body: old_body,
-        new_body: group[:body],
-        path: path,
-        line_number: group[:line_number]
     end
 
     # Given a parsed group, clean out its contents.
@@ -209,27 +180,13 @@ module Chusaku
       copy
     end
 
-    # Returns the copy for recorded changes if `--verbose` flag is passed.
+    # Returns the copy for changed files if `--verbose` flag is passed.
     #
-    # @return [String] Copy of recorded changes
+    # @return [String] Copy for changed files
     def changes_copy
       return "" unless @flags.include?(:verbose)
 
-      @changes.map do |change|
-        <<~CHANGE_OUTPUT
-          [#{change[:path]}:#{change[:line_number]}]
-
-          Before:
-          ```ruby
-          #{change[:old_body].chomp}
-          ```
-
-          After:
-          ```ruby
-          #{change[:new_body].chomp}
-          ```
-        CHANGE_OUTPUT
-      end.join("\n") + "\n"
+      @changed_files.map { |file| "Annotated #{file}" }.join("\n") + "\n"
     end
   end
 end
