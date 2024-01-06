@@ -53,10 +53,9 @@ Usage: chusaku [options]
         --dry-run                       Run without file modifications
         --exit-with-error-on-annotation Fail if any file was annotated
     -c, --controllers-pattern=GLOB      Specify alternative controller files glob pattern
-        --verbose                       Print all annotations
+        --verbose                       Print all annotated files
     -v, --version                       Show Chusaku version number and quit
     -h, --help                          Show this help message and quit
-
 ```
 
 ### Rake usage

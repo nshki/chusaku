@@ -97,7 +97,7 @@ module Chusaku
     # @param opts [OptionParser] OptionParser instance
     # @return [void]
     def add_verbose_flag(opts)
-      opts.on("--verbose", "Print all annotations") do
+      opts.on("--verbose", "Print all annotated files") do
         @options[:verbose] = true
       end
     end
