@@ -38,23 +38,10 @@ class ChusakuTest < Minitest::Test
     out, _err = capture_io { exit_code = Chusaku.call(verbose: true) }
 
     assert_equal(0, exit_code)
-    assert_includes \
-      out,
-      <<~CHANGES_COPY
-        [test/mock/app/controllers/api/tacos_controller.rb:2]
-
-        Before:
-        ```ruby
-          def show
-        ```
-
-        After:
-        ```ruby
-          # @route GET / (root)
-          # @route GET /api/tacos/:id (taco)
-          def show
-        ```
-      CHANGES_COPY
+    refute_includes(out, "Annotated test/mock/app/controllers/api/burritos_controller.rb")
+    assert_includes(out, "Annotated test/mock/app/controllers/api/cakes_controller.rb")
+    assert_includes(out, "Annotated test/mock/app/controllers/api/tacos_controller.rb")
+    assert_includes(out, "Annotated test/mock/app/controllers/waterlilies_controller.rb")
   end
 
   def test_mock_app
