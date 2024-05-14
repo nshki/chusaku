@@ -4,6 +4,8 @@ require "chusaku/routes"
 
 # Handles core functionality of annotating projects.
 module Chusaku
+  DEFAULT_CONTROLLERS_PATTERN = "app/controllers/**/*_controller.rb".freeze
+
   class << self
     # The main method to run Chusaku. Annotate all actions in a Rails project as
     # follows:
@@ -19,14 +21,17 @@ module Chusaku
       @flags = flags
       @routes = Chusaku::Routes.call
       @changed_files = []
-      controllers_pattern = @flags[:controllers_pattern] || "app/controllers/**/*_controller.rb"
+      controllers_pattern = @flags[:controllers_pattern] || DEFAULT_CONTROLLERS_PATTERN
+      controllers_paths = Dir.glob(Rails.root.join(controllers_pattern))
 
-      Dir.glob(Rails.root.join(controllers_pattern)).each do |path|
-        controller = %r{controllers/(.*)_controller\.rb}.match(path)[1]
-        actions = @routes[controller]
-        next if actions.nil?
+      @routes.each do |controller, actions|
+        next unless controller
 
-        annotate_file(path: path, controller: controller, actions: actions.keys)
+        controller_class = "#{controller.underscore.camelize}Controller".constantize
+        source_path = controller_class.instance_method(actions.keys.first.to_sym).source_location[0]
+        next unless controllers_paths.include?(source_path)
+
+        annotate_file(path: path, actions: actions)
       end
 
       output_results
@@ -46,16 +51,15 @@ module Chusaku
     # Adds annotations to the given file.
     #
     # @param path [String] Path to file
-    # @param controller [String] Controller name
-    # @param actions [Array<String>] List of valid actions for the controller
+    # @param actions [Hash<String, Hash>] List of valid action data for the controller
     # @return [void]
-    def annotate_file(path:, controller:, actions:)
-      parsed_file = Chusaku::Parser.call(path: path, actions: actions)
+    def annotate_file(path:, actions:)
+      parsed_file = Chusaku::Parser.call(path: path, actions: actions.keys)
       parsed_file[:groups].each_cons(2) do |prev, curr|
         clean_group(prev)
         next unless curr[:type] == :action
 
-        route_data = @routes[controller][curr[:action]]
+        route_data = actions[curr[:action]]
         next unless route_data.any?
 
         annotate_group(group: curr, route_data: route_data)

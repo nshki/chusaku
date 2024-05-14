@@ -27,7 +27,19 @@ module Chusaku
       def call
         routes = {}
 
-        Rails.application.routes.routes.each do |route|
+        populate_routes(Rails.application, routes)
+        backfill_routes(routes)
+      end
+
+      private
+
+      def populate_routes(app, routes)
+        app.routes.routes.each do |route|
+          if route.app.engine?
+            populate_routes(route.app.app, routes)
+            next
+          end
+
           controller, action, defaults = extract_data_from(route)
           routes[controller] ||= {}
           routes[controller][action] ||= []
@@ -39,11 +51,7 @@ module Chusaku
             action: action,
             defaults: defaults
         end
-
-        backfill_routes(routes)
       end
-
-      private
 
       # Adds formatted route info for the given param combination.
       #
