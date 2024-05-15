@@ -31,7 +31,7 @@ module Chusaku
         source_path = controller_class.instance_method(actions.keys.first.to_sym).source_location[0]
         next unless controllers_paths.include?(source_path)
 
-        annotate_file(path: path, actions: actions)
+        annotate_file(path: source_path, actions: actions)
       end
 
       output_results
