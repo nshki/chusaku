@@ -4,7 +4,7 @@ require "chusaku/routes"
 
 # Handles core functionality of annotating projects.
 module Chusaku
-  DEFAULT_CONTROLLERS_PATTERN = "app/controllers/**/*_controller.rb".freeze
+  DEFAULT_CONTROLLERS_PATTERN = "**/*_controller.rb".freeze
 
   class << self
     # The main method to run Chusaku. Annotate all actions in a Rails project as
