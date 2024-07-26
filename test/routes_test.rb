@@ -37,6 +37,11 @@ class RoutesTest < Minitest::Test
           "one_off" => [
             {verb: "GET", path: "/one-off", name: nil, defaults: {}}
           ]
+        },
+        "cars" => {
+          "create" => [
+            {verb: "POST", path: "/engine/cars", name: "car", defaults: {}}
+          ]
         }
       }
 

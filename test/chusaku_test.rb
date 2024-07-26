@@ -17,7 +17,7 @@ class ChusakuTest < Minitest::Test
     out, _err = capture_io { exit_code = Chusaku.call(error_on_annotation: true) }
 
     assert_equal(1, exit_code)
-    assert_equal(3, File.written_files.count)
+    assert_equal(4, File.written_files.count)
     assert_includes(out, "Exited with status code 1.")
   end
 
@@ -49,11 +49,12 @@ class ChusakuTest < Minitest::Test
 
     capture_io { exit_code = Chusaku.call }
     files = File.written_files
-    base_path = "#{Rails.root}/app/controllers"
+    app_path = "#{Rails.root}/app/controllers"
+    engine_path = "#{Rails.root}/engine/app/controllers"
 
     assert_equal(0, exit_code)
-    assert_equal(3, files.count)
-    refute_includes(files, "#{base_path}/api/burritos_controller.rb")
+    assert_equal(4, files.count)
+    refute_includes(files, "#{app_path}/api/burritos_controller.rb")
 
     expected =
       <<~HEREDOC
@@ -68,7 +69,7 @@ class ChusakuTest < Minitest::Test
           end
         end
       HEREDOC
-    assert_equal(expected, files["#{base_path}/api/cakes_controller.rb"])
+    assert_equal(expected, files["#{app_path}/api/cakes_controller.rb"])
 
     expected =
       <<~HEREDOC
@@ -106,7 +107,7 @@ class ChusakuTest < Minitest::Test
           end
         end
       HEREDOC
-    assert_equal(expected, files["#{base_path}/api/tacos_controller.rb"])
+    assert_equal(expected, files["#{app_path}/api/tacos_controller.rb"])
 
     expected =
       <<~HEREDOC
@@ -122,7 +123,17 @@ class ChusakuTest < Minitest::Test
           end
         end
       HEREDOC
-    assert_equal(expected, files["#{base_path}/waterlilies_controller.rb"])
+    assert_equal(expected, files["#{app_path}/waterlilies_controller.rb"])
+
+    expected =
+      <<~HEREDOC
+        class CarsController < EngineController
+          # @route POST /engine/cars (car)
+          def create
+          end
+        end
+      HEREDOC
+    assert_equal(expected, files["#{engine_path}/cars_controller.rb"])
   end
 
   def test_mock_app_with_no_pending_annotations
