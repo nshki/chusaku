@@ -6,6 +6,11 @@
 # The mocks used should reflect the files located in `test/mock/app/`.
 
 require "pathname"
+require_relative "app/controllers/application_controller"
+require_relative "app/controllers/waterlilies_controller"
+require_relative "app/controllers/api/burritos_controller"
+require_relative "app/controllers/api/cakes_controller"
+require_relative "app/controllers/api/tacos_controller"
 
 module Rails
   class << self
@@ -121,7 +126,7 @@ module Rails
     #
     # @return [Pathname] Pathname object like Rails.root
     def root
-      Pathname.new("test/mock")
+      Pathname.new("test/mock").realpath
     end
 
     private
@@ -139,9 +144,13 @@ module Rails
       @@route_allowlist ||= []
       return if @@route_allowlist.any? && @@route_allowlist.index("#{controller}##{action}").nil?
 
+      app = Minitest::Mock.new
+      app.expect(:engine?, false)
+
       route = Minitest::Mock.new
       route.expect(:defaults, {controller: controller, action: action, **defaults})
       route.expect(:verb, verb)
+      route.expect(:app, app)
       route_path = Minitest::Mock.new
 
       # We'll be calling these particular methods more than once to test for

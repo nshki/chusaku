@@ -38,10 +38,10 @@ class ChusakuTest < Minitest::Test
     out, _err = capture_io { exit_code = Chusaku.call(verbose: true) }
 
     assert_equal(0, exit_code)
-    refute_includes(out, "Annotated test/mock/app/controllers/api/burritos_controller.rb")
-    assert_includes(out, "Annotated test/mock/app/controllers/api/cakes_controller.rb")
-    assert_includes(out, "Annotated test/mock/app/controllers/api/tacos_controller.rb")
-    assert_includes(out, "Annotated test/mock/app/controllers/waterlilies_controller.rb")
+    refute_includes(out, "Annotated #{Rails.root}/app/controllers/api/burritos_controller.rb")
+    assert_includes(out, "Annotated #{Rails.root}/app/controllers/api/cakes_controller.rb")
+    assert_includes(out, "Annotated #{Rails.root}/app/controllers/api/tacos_controller.rb")
+    assert_includes(out, "Annotated #{Rails.root}/app/controllers/waterlilies_controller.rb")
   end
 
   def test_mock_app
@@ -49,7 +49,7 @@ class ChusakuTest < Minitest::Test
 
     capture_io { exit_code = Chusaku.call }
     files = File.written_files
-    base_path = "test/mock/app/controllers"
+    base_path = "#{Rails.root}/app/controllers"
 
     assert_equal(0, exit_code)
     assert_equal(3, files.count)
@@ -57,12 +57,14 @@ class ChusakuTest < Minitest::Test
 
     expected =
       <<~HEREDOC
-        class CakesController < ApplicationController
-          # This route's GET action should be named the same as its PUT action,
-          # even though only the PUT action is named.
-          # @route GET /api/cakes/inherit (inherit)
-          # @route PUT /api/cakes/inherit (inherit)
-          def inherit
+        module Api
+          class CakesController < ApplicationController
+            # This route's GET action should be named the same as its PUT action,
+            # even though only the PUT action is named.
+            # @route GET /api/cakes/inherit (inherit)
+            # @route PUT /api/cakes/inherit (inherit)
+            def inherit
+            end
           end
         end
       HEREDOC
@@ -70,35 +72,37 @@ class ChusakuTest < Minitest::Test
 
     expected =
       <<~HEREDOC
-        class TacosController < ApplicationController
-          # @route GET / (root)
-          # @route GET /api/tacos/:id (taco)
-          def show
-          end
+        module Api
+          class TacosController < ApplicationController
+            # @route GET / (root)
+            # @route GET /api/tacos/:id (taco)
+            def show
+            end
 
-          # This is an example of generated annotations that come with Rails 6
-          # scaffolds. These should be replaced by Chusaku annotations.
-          # @route POST /api/tacos (tacos)
-          def create
-          end
+            # This is an example of generated annotations that come with Rails 6
+            # scaffolds. These should be replaced by Chusaku annotations.
+            # @route POST /api/tacos (tacos)
+            def create
+            end
 
-          # Update all the tacos!
-          # We should not see a duplicate @route in this comment block.
-          # But this should remain (@route), because it's just words.
-          # @route PUT /api/tacos/:id (taco)
-          # @route PATCH /api/tacos/:id (taco)
-          def update
-          end
+            # Update all the tacos!
+            # We should not see a duplicate @route in this comment block.
+            # But this should remain (@route), because it's just words.
+            # @route PUT /api/tacos/:id (taco)
+            # @route PATCH /api/tacos/:id (taco)
+            def update
+            end
 
-          # This route doesn't exist, so it should be deleted.
-          def destroy
-            puts("Tacos are indestructible")
-          end
+            # This route doesn't exist, so it should be deleted.
+            def destroy
+              puts("Tacos are indestructible")
+            end
 
-          private
+            private
 
-          def tacos_params
-            params.require(:tacos).permit(:carnitas)
+            def tacos_params
+              params.require(:tacos).permit(:carnitas)
+            end
           end
         end
       HEREDOC

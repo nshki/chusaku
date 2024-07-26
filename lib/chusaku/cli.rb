@@ -42,7 +42,7 @@ module Chusaku
     # @return [void]
     def check_for_rails_project
       controllers_pattern = options[:controllers_pattern] || DEFAULT_CONTROLLERS_PATTERN
-      has_controllers = Dir.glob(Rails.root.join(controllers_pattern)).present?
+      has_controllers = !Dir.glob(Rails.root.join(controllers_pattern)).empty?
       has_rakefile = File.exist?("./Rakefile")
       raise NotARailsProject unless has_controllers && has_rakefile
     end
