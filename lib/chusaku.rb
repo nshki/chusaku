@@ -28,7 +28,10 @@ module Chusaku
         next unless controller
 
         controller_class = "#{controller.underscore.camelize}Controller".constantize
-        source_path = controller_class.instance_method(actions.keys.first.to_sym).source_location[0]
+        action_method_name = actions.keys.first&.to_sym
+        next unless !action_method_name.nil? && controller_class.method_defined?(action_method_name)
+
+        source_path = controller_class.instance_method(action_method_name).source_location&.[](0)
         next unless controllers_paths.include?(source_path)
 
         annotate_file(path: source_path, actions: actions)
