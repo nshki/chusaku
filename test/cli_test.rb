@@ -40,7 +40,7 @@ class Chusaku::CLITest < Minitest::Test
 
   def test_project_detection
     _, err = capture_io do
-      assert_equal(1, Chusaku::CLI.new.call([]))
+      assert_equal(1, Chusaku::CLI.new.call(["-c", "**/*_not_controller.rb"]))
     end
     assert_equal(<<~ERR, err)
       Please run chusaku from the root of your project.

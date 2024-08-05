@@ -41,7 +41,8 @@ module Chusaku
     # @raise [Chusaku::CLI::NotARailsProject] Exception if not Rails project
     # @return [void]
     def check_for_rails_project
-      has_controllers = File.directory?("./app/controllers")
+      controllers_pattern = options[:controllers_pattern] || DEFAULT_CONTROLLERS_PATTERN
+      has_controllers = !Dir.glob(Rails.root.join(controllers_pattern)).empty?
       has_rakefile = File.exist?("./Rakefile")
       raise NotARailsProject unless has_controllers && has_rakefile
     end

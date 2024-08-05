@@ -7,5 +7,7 @@
 /spec/reports/
 /tmp/
 
+.DS_Store
+
 .ruby-version
 Gemfile.lock

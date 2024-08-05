@@ -17,7 +17,7 @@ class ChusakuTest < Minitest::Test
     out, _err = capture_io { exit_code = Chusaku.call(error_on_annotation: true) }
 
     assert_equal(1, exit_code)
-    assert_equal(3, File.written_files.count)
+    assert_equal(4, File.written_files.count)
     assert_includes(out, "Exited with status code 1.")
   end
 
@@ -38,10 +38,10 @@ class ChusakuTest < Minitest::Test
     out, _err = capture_io { exit_code = Chusaku.call(verbose: true) }
 
     assert_equal(0, exit_code)
-    refute_includes(out, "Annotated test/mock/app/controllers/api/burritos_controller.rb")
-    assert_includes(out, "Annotated test/mock/app/controllers/api/cakes_controller.rb")
-    assert_includes(out, "Annotated test/mock/app/controllers/api/tacos_controller.rb")
-    assert_includes(out, "Annotated test/mock/app/controllers/waterlilies_controller.rb")
+    refute_includes(out, "Annotated #{Rails.root}/app/controllers/api/burritos_controller.rb")
+    assert_includes(out, "Annotated #{Rails.root}/app/controllers/api/cakes_controller.rb")
+    assert_includes(out, "Annotated #{Rails.root}/app/controllers/api/tacos_controller.rb")
+    assert_includes(out, "Annotated #{Rails.root}/app/controllers/waterlilies_controller.rb")
   end
 
   def test_mock_app
@@ -49,60 +49,65 @@ class ChusakuTest < Minitest::Test
 
     capture_io { exit_code = Chusaku.call }
     files = File.written_files
-    base_path = "test/mock/app/controllers"
+    app_path = "#{Rails.root}/app/controllers"
+    engine_path = "#{Rails.root}/engine/app/controllers"
 
     assert_equal(0, exit_code)
-    assert_equal(3, files.count)
-    refute_includes(files, "#{base_path}/api/burritos_controller.rb")
+    assert_equal(4, files.count)
+    refute_includes(files, "#{app_path}/api/burritos_controller.rb")
 
     expected =
       <<~HEREDOC
-        class CakesController < ApplicationController
-          # This route's GET action should be named the same as its PUT action,
-          # even though only the PUT action is named.
-          # @route GET /api/cakes/inherit (inherit)
-          # @route PUT /api/cakes/inherit (inherit)
-          def inherit
+        module Api
+          class CakesController < ApplicationController
+            # This route's GET action should be named the same as its PUT action,
+            # even though only the PUT action is named.
+            # @route GET /api/cakes/inherit (inherit)
+            # @route PUT /api/cakes/inherit (inherit)
+            def inherit
+            end
           end
         end
       HEREDOC
-    assert_equal(expected, files["#{base_path}/api/cakes_controller.rb"])
+    assert_equal(expected, files["#{app_path}/api/cakes_controller.rb"])
 
     expected =
       <<~HEREDOC
-        class TacosController < ApplicationController
-          # @route GET / (root)
-          # @route GET /api/tacos/:id (taco)
-          def show
-          end
+        module Api
+          class TacosController < ApplicationController
+            # @route GET / (root)
+            # @route GET /api/tacos/:id (taco)
+            def show
+            end
 
-          # This is an example of generated annotations that come with Rails 6
-          # scaffolds. These should be replaced by Chusaku annotations.
-          # @route POST /api/tacos (tacos)
-          def create
-          end
+            # This is an example of generated annotations that come with Rails 6
+            # scaffolds. These should be replaced by Chusaku annotations.
+            # @route POST /api/tacos (tacos)
+            def create
+            end
 
-          # Update all the tacos!
-          # We should not see a duplicate @route in this comment block.
-          # But this should remain (@route), because it's just words.
-          # @route PUT /api/tacos/:id (taco)
-          # @route PATCH /api/tacos/:id (taco)
-          def update
-          end
+            # Update all the tacos!
+            # We should not see a duplicate @route in this comment block.
+            # But this should remain (@route), because it's just words.
+            # @route PUT /api/tacos/:id (taco)
+            # @route PATCH /api/tacos/:id (taco)
+            def update
+            end
 
-          # This route doesn't exist, so it should be deleted.
-          def destroy
-            puts("Tacos are indestructible")
-          end
+            # This route doesn't exist, so it should be deleted.
+            def destroy
+              puts("Tacos are indestructible")
+            end
 
-          private
+            private
 
-          def tacos_params
-            params.require(:tacos).permit(:carnitas)
+            def tacos_params
+              params.require(:tacos).permit(:carnitas)
+            end
           end
         end
       HEREDOC
-    assert_equal(expected, files["#{base_path}/api/tacos_controller.rb"])
+    assert_equal(expected, files["#{app_path}/api/tacos_controller.rb"])
 
     expected =
       <<~HEREDOC
@@ -118,7 +123,17 @@ class ChusakuTest < Minitest::Test
           end
         end
       HEREDOC
-    assert_equal(expected, files["#{base_path}/waterlilies_controller.rb"])
+    assert_equal(expected, files["#{app_path}/waterlilies_controller.rb"])
+
+    expected =
+      <<~HEREDOC
+        class CarsController < EngineController
+          # @route POST /engine/cars (car)
+          def create
+          end
+        end
+      HEREDOC
+    assert_equal(expected, files["#{engine_path}/cars_controller.rb"])
   end
 
   def test_mock_app_with_no_pending_annotations
