@@ -40,6 +40,11 @@ module RouteHelper
     route
   end
 
+  # Stored procedure to mock a new engine.
+  #
+  # @param engine [Module] Mocked engine module
+  # @param path [String] Path for mocked engine
+  # @return [Minitest::Mock]
   def mock_engine(engine:, path:)
     route = Minitest::Mock.new
 

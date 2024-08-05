@@ -36,6 +36,9 @@ module Engine
       app
     end
 
+    # Lets us call `Engine.engine?` without a skeleton Rails app.
+    #
+    # @return [Boolean]
     def engine?
       true
     end
