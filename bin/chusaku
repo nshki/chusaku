@@ -1,18 +1,14 @@
 #!/usr/bin/env ruby
 
 require "rubygems"
+require "bundler"
 
-begin
-  # Use project's bundle.
-  require "bundler"
-  Bundler.setup
+Bundler.setup
 
-  # Use project's environment.
-  require "rake"
-  load "./Rakefile"
-  Rake::Task[:environment].invoke
-rescue
-end
+# Use project's environment.
+require "rake"
+load "./Rakefile"
+Rake::Task[:environment].invoke
 
 require "chusaku/cli"
 
