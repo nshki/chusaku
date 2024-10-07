@@ -1,3 +1,4 @@
+require "rake"
 require "chusaku/version"
 require "chusaku/parser"
 require "chusaku/routes"
@@ -5,6 +6,7 @@ require "chusaku/routes"
 # Handles core functionality of annotating projects.
 module Chusaku
   DEFAULT_CONTROLLERS_PATTERN = "**/*_controller.rb".freeze
+  DEFAULT_EXCLUSION_PATTERN = "vendor/**/*_controller.rb".freeze
 
   class << self
     # The main method to run Chusaku. Annotate all actions in a Rails project as
@@ -22,7 +24,10 @@ module Chusaku
       @routes = Chusaku::Routes.call
       @changed_files = []
       controllers_pattern = @flags[:controllers_pattern] || DEFAULT_CONTROLLERS_PATTERN
-      controllers_paths = Dir.glob(Rails.root.join(controllers_pattern))
+      exclusion_pattern = @flags[:exclusion_pattern] || DEFAULT_EXCLUSION_PATTERN
+      controllers_paths = FileList
+        .new(Rails.root.join(controllers_pattern))
+        .exclude(Rails.root.join(exclusion_pattern))
 
       @routes.each do |controller, actions|
         next unless controller
