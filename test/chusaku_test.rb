@@ -157,4 +157,15 @@ class ChusakuTest < Minitest::Test
     assert_empty(File.written_files)
     assert_equal("Controller files unchanged.\n", out)
   end
+
+  def test_mock_app_with_custom_exclusion_pattern
+    exit_code = 0
+
+    args = {exclusion_pattern: "**/cakes_controller.rb"}
+    out, = capture_io { exit_code = Chusaku.call(args) }
+
+    assert_equal(0, exit_code)
+    assert_equal(3, File.written_files.count)
+    assert_equal("Chusaku has finished running.\n", out)
+  end
 end

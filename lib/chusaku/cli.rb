@@ -42,7 +42,7 @@ module Chusaku
     # @return [void]
     def check_for_rails_project
       controllers_pattern = options[:controllers_pattern] || DEFAULT_CONTROLLERS_PATTERN
-      has_controllers = !Dir.glob(Rails.root.join(controllers_pattern)).empty?
+      has_controllers = FileList.new(Rails.root.join(controllers_pattern)).any?
       has_rakefile = File.exist?("./Rakefile")
       raise NotARailsProject unless has_controllers && has_rakefile
     end
@@ -57,6 +57,7 @@ module Chusaku
         add_dry_run_flag(opts)
         add_error_on_annotation_flag(opts)
         add_controllers_pattern_flag(opts)
+        add_exclusion_pattern_flag(opts)
         add_verbose_flag(opts)
         add_version_flag(opts)
         add_help_flag(opts)
@@ -90,6 +91,16 @@ module Chusaku
     def add_controllers_pattern_flag(opts)
       opts.on("-c", "--controllers-pattern", "=GLOB", "Specify alternative controller files glob pattern") do |value|
         @options[:controllers_pattern] = value
+      end
+    end
+
+    # Adds `--exclusion-pattern` flag.
+    #
+    # @param opts [OptionParser] OptionParser instance
+    # @return [void]
+    def add_exclusion_pattern_flag(opts)
+      opts.on("-e", "--exclusion-pattern", "=GLOB", "Specify controller files exclusion glob pattern") do |value|
+        @options[:exclusion_pattern] = value
       end
     end
 
