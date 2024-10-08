@@ -1,7 +1,7 @@
 require_relative "test_helper"
 
-class ChusakuTest < Minitest::Test
-  def test_dry_run_flag
+describe "Chusaku" do
+  it "implements a `dry` option" do
     exit_code = 0
 
     out, _err = capture_io { exit_code = Chusaku.call(dry: true) }
@@ -11,7 +11,7 @@ class ChusakuTest < Minitest::Test
     assert_includes(out, "This was a dry run so no files were changed.")
   end
 
-  def test_exit_with_error_on_annotation_flag
+  it "implements an `error_on_annotation` option" do
     exit_code = 0
 
     out, _err = capture_io { exit_code = Chusaku.call(error_on_annotation: true) }
@@ -21,7 +21,7 @@ class ChusakuTest < Minitest::Test
     assert_includes(out, "Exited with status code 1.")
   end
 
-  def test_dry_run_and_exit_with_error_flag
+  it "can combine the `dry` and `error_on_annotation` options" do
     exit_code = 0
 
     out, _err = capture_io { exit_code = Chusaku.call(dry: true, error_on_annotation: true) }
@@ -32,7 +32,7 @@ class ChusakuTest < Minitest::Test
     assert_includes(out, "Exited with status code 1.")
   end
 
-  def test_verbose_flag
+  it "implements a `verbose` option" do
     exit_code = 0
 
     out, _err = capture_io { exit_code = Chusaku.call(verbose: true) }
@@ -44,7 +44,7 @@ class ChusakuTest < Minitest::Test
     assert_includes(out, "Annotated #{Rails.root}/app/controllers/waterlilies_controller.rb")
   end
 
-  def test_mock_app
+  it "executes properly for the mock app" do
     exit_code = 0
 
     capture_io { exit_code = Chusaku.call }
@@ -136,7 +136,7 @@ class ChusakuTest < Minitest::Test
     assert_equal(expected, files["#{engine_path}/cars_controller.rb"])
   end
 
-  def test_mock_app_with_no_pending_annotations
+  it "outputs properly if there are no changes" do
     Rails.set_route_allowlist(["api/burritos#create"])
     exit_code = 0
 
@@ -147,7 +147,7 @@ class ChusakuTest < Minitest::Test
     assert_equal("Controller files unchanged.\n", out)
   end
 
-  def test_mock_app_with_non_matching_controllers_pattern
+  it "doesn't detect any changes if a custom `controllers_pattern` matches nothing" do
     exit_code = 0
 
     args = {controllers_pattern: "**/nomatch/*_controller.rb"}
@@ -158,7 +158,7 @@ class ChusakuTest < Minitest::Test
     assert_equal("Controller files unchanged.\n", out)
   end
 
-  def test_mock_app_with_custom_exclusion_pattern
+  it "annotates the correct number of files with a custom `exclusion_pattern`" do
     exit_code = 0
 
     args = {exclusion_pattern: "**/cakes_controller.rb"}
