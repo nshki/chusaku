@@ -1,7 +1,7 @@
 require_relative "test_helper"
 
-class Chusaku::CLITest < Minitest::Test
-  def test_help_flag
+describe "Chusaku::CLI" do
+  it "implements a help flag" do
     # -h
     out, = capture_io do
       assert_equal(0, Chusaku::CLI.new.call(["-h"]))
@@ -15,14 +15,14 @@ class Chusaku::CLITest < Minitest::Test
     assert_match(/Show this help message and quit/, out)
   end
 
-  def test_version_flag
+  it "implements a version flag" do
     out, = capture_io do
       assert_equal(0, Chusaku::CLI.new.call(["-v"]))
     end
     assert_match(/\d+\.\d+\.\d+/, out)
   end
 
-  def test_exit_flag_precedence
+  it "handles -v and -h flags in any order" do
     # Passing -v before -h executes -v and exits.
     out, = capture_io do
       assert_equal(0, Chusaku::CLI.new.call(["-v", "-h"]))
@@ -38,7 +38,7 @@ class Chusaku::CLITest < Minitest::Test
     refute_match(/\d+\.\d+\.\d+/, out)
   end
 
-  def test_project_detection
+  it "detects Rails projects" do
     _, err = capture_io do
       assert_equal(1, Chusaku::CLI.new.call(["-c", "**/*_not_controller.rb"]))
     end
@@ -47,7 +47,7 @@ class Chusaku::CLITest < Minitest::Test
     ERR
   end
 
-  def test_dry_flag
+  it "implements a dry run flag" do
     cli = Chusaku::CLI.new
     cli.stub(:check_for_rails_project, nil) do
       capture_io do
@@ -57,7 +57,7 @@ class Chusaku::CLITest < Minitest::Test
     end
   end
 
-  def test_exit_with_error_on_annotation_flag
+  it "implements an exit-on-error flag" do
     cli = Chusaku::CLI.new
     cli.stub(:check_for_rails_project, nil) do
       capture_io do
@@ -67,7 +67,7 @@ class Chusaku::CLITest < Minitest::Test
     end
   end
 
-  def test_verbose_flag
+  it "implements a verbose flag" do
     cli = Chusaku::CLI.new
     cli.stub(:check_for_rails_project, nil) do
       capture_io do
@@ -77,7 +77,7 @@ class Chusaku::CLITest < Minitest::Test
     end
   end
 
-  def test_controllers_pattern_flag
+  it "implements a controllers pattern flag" do
     # --controllers-pattern
     cli = Chusaku::CLI.new
     cli.stub(:check_for_rails_project, nil) do
@@ -94,6 +94,26 @@ class Chusaku::CLITest < Minitest::Test
         assert_equal(0, cli.call(["-c", "**/controllers/**/*_controller.rb"]))
       end
       assert_equal({controllers_pattern: "**/controllers/**/*_controller.rb"}, cli.options)
+    end
+  end
+
+  it "implements an exclusion pattern flag" do
+    # --exclusion-pattern
+    cli = Chusaku::CLI.new
+    cli.stub(:check_for_rails_project, nil) do
+      capture_io do
+        assert_equal(0, cli.call(["--exclusion-pattern=**/*_not_controller.rb"]))
+      end
+      assert_equal({exclusion_pattern: "**/*_not_controller.rb"}, cli.options)
+    end
+
+    # -e
+    cli = Chusaku::CLI.new
+    cli.stub(:check_for_rails_project, nil) do
+      capture_io do
+        assert_equal(0, cli.call(["-e", "**/*_not_controller.rb"]))
+      end
+      assert_equal({exclusion_pattern: "**/*_not_controller.rb"}, cli.options)
     end
   end
 end

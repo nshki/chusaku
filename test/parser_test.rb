@@ -1,7 +1,7 @@
 require_relative "test_helper"
 
-class ParserTest < Minitest::Test
-  def test_example_file
+describe "Chusaku::Parser" do
+  it "parses example file properly" do
     result = Chusaku::Parser.call \
       path: "#{__dir__}/mock/examples/example.rb",
       actions: %w[foo]
@@ -21,7 +21,7 @@ class ParserTest < Minitest::Test
       (result[:groups].map { |r| r[:line_number] })
   end
 
-  def test_empty_file
+  it "parses empty file properly" do
     expected = [{}]
 
     result = Chusaku::Parser.call \
@@ -31,7 +31,7 @@ class ParserTest < Minitest::Test
     assert_equal(expected, result[:groups])
   end
 
-  def test_comment
+  it "parses comments properly" do
     expected = {type: :comment, body: "# foobar", action: nil}
     line = "# foobar"
 
@@ -40,7 +40,7 @@ class ParserTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def test_comment_with_spaces
+  it "parses comments with spaces properly" do
     expected = {type: :comment, body: "  # foobar  ", action: nil}
     line = "  # foobar  "
 
@@ -49,7 +49,7 @@ class ParserTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def test_comment_with_tabs
+  it "parses comments with tabs properly" do
     expected = {type: :comment, body: "\t# foobar\t", action: nil}
     line = "\t# foobar\t"
 
@@ -58,7 +58,7 @@ class ParserTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def test_comment_with_spaces_and_tabs
+  it "parses comments with spaces and tabs properly" do
     expected = {type: :comment, body: "  \t# foobar\t  ", action: nil}
     line = "  \t# foobar\t  "
 
@@ -67,7 +67,7 @@ class ParserTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def test_action
+  it "parses controller actions properly" do
     expected = {type: :action, body: "def foo", action: "foo"}
     line = "def foo"
 
@@ -76,7 +76,7 @@ class ParserTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def test_action_with_spaces
+  it "parses controller actions with spaces properly" do
     expected = {type: :action, body: "  def bar  ", action: "bar"}
     line = "  def bar  "
 
@@ -85,7 +85,7 @@ class ParserTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def test_action_with_tabs
+  it "parses controller actions with tabs properly" do
     expected = {type: :action, body: "\tdef foo\t", action: "foo"}
     line = "\tdef foo\t"
 
@@ -94,7 +94,7 @@ class ParserTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def test_action_with_comment
+  it "parses controller actions with comments properly" do
     expected = {type: :action, body: "def bar # comment", action: "bar"}
     line = "def bar # comment"
 
@@ -103,7 +103,7 @@ class ParserTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def test_non_action_method
+  it "parses regular methods properly" do
     expected = {type: :code, body: "def carrot", action: nil}
     line = "def carrot"
 
@@ -112,7 +112,7 @@ class ParserTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def test_code
+  it "parses code blocks properly" do
     expected = {type: :code, body: 'puts "hello world!"', action: nil}
     line = 'puts "hello world!"'
 
@@ -121,7 +121,7 @@ class ParserTest < Minitest::Test
     assert_equal(expected, result)
   end
 
-  def test_code_with_comment
+  it "parses code blocks with comments" do
     expected = {type: :code, body: 'puts "hello world!" # hey', action: nil}
     line = 'puts "hello world!" # hey'
 

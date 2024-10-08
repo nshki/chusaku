@@ -1,7 +1,7 @@
 require_relative "test_helper"
 
-class RoutesTest < Minitest::Test
-  def test_mock_rails
+describe "Chusaku::Routes" do
+  it "parses routes correctly" do
     expected =
       {
         "api/burritos" => {
