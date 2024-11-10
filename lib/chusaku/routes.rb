@@ -192,10 +192,10 @@ module Chusaku
         controller = defaults.delete(:controller)
         action = defaults.delete(:action)
 
-        controller_class = "#{controller.underscore.camelize}Controller".constantize
-        action_method_name = action.to_sym
+        controller_class = controller ? "#{controller.underscore.camelize}Controller".constantize : nil
+        action_method_name = action&.to_sym
         source_path =
-          if !action_method_name.nil? && controller_class.method_defined?(action_method_name)
+          if !action_method_name.nil? && controller_class&.method_defined?(action_method_name)
             controller_class.instance_method(action_method_name).source_location&.[](0)
           else
             ""
