@@ -13,6 +13,14 @@ describe "Chusaku::Routes" do
           "inherit" => [
             {verb: "GET", path: "/api/cakes/inherit", name: "inherit", defaults: {}},
             {verb: "PUT", path: "/api/cakes/inherit", name: "inherit", defaults: {}}
+          ],
+          "index" => [
+            {verb: "GET", path: "/api/cakes", name: "cakes", defaults: {}}
+          ]
+        },
+        "api/croissants" => {
+          "index" => [
+            {verb: "GET", path: "/api/croissants", name: "croissants", defaults: {}}
           ]
         },
         "api/tacos" => {
