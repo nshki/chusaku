@@ -17,7 +17,7 @@ describe "Chusaku" do
     out, _err = capture_io { exit_code = Chusaku.call(error_on_annotation: true) }
 
     assert_equal(1, exit_code)
-    assert_equal(4, File.written_files.count)
+    assert_equal(5, File.written_files.count)
     assert_includes(out, "Exited with status code 1.")
   end
 
@@ -53,13 +53,13 @@ describe "Chusaku" do
     engine_path = "#{Rails.root}/engine/app/controllers"
 
     assert_equal(0, exit_code)
-    assert_equal(4, files.count)
+    assert_equal(5, files.count)
     refute_includes(files, "#{app_path}/api/burritos_controller.rb")
 
     expected =
       <<~HEREDOC
         module Api
-          class CakesController < ApplicationController
+          class CakesController < PastriesController
             # This route's GET action should be named the same as its PUT action,
             # even though only the PUT action is named.
             # @route GET /api/cakes/inherit (inherit)
@@ -108,6 +108,18 @@ describe "Chusaku" do
         end
       HEREDOC
     assert_equal(expected, files["#{app_path}/api/tacos_controller.rb"])
+
+    expected =
+      <<~HEREDOC
+        class PastriesController < ApplicationController
+          # This should be annotated for each child controller that inherits from this class.
+          # @route GET /api/cakes (cakes)
+          # @route GET /api/croissants (croissants)
+          def index
+          end
+        end
+      HEREDOC
+    assert_equal(expected, files["#{app_path}/pastries_controller.rb"])
 
     expected =
       <<~HEREDOC
@@ -165,7 +177,7 @@ describe "Chusaku" do
     out, = capture_io { exit_code = Chusaku.call(args) }
 
     assert_equal(0, exit_code)
-    assert_equal(3, File.written_files.count)
+    assert_equal(4, File.written_files.count)
     assert_equal("Chusaku has finished running.\n", out)
   end
 end

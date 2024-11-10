@@ -10,9 +10,11 @@ require_relative "engine"
 require_relative "route_helper"
 
 require_relative "app/controllers/application_controller"
+require_relative "app/controllers/pastries_controller"
 require_relative "app/controllers/waterlilies_controller"
 require_relative "app/controllers/api/burritos_controller"
 require_relative "app/controllers/api/cakes_controller"
+require_relative "app/controllers/api/croissants_controller"
 require_relative "app/controllers/api/tacos_controller"
 
 module Rails
@@ -47,6 +49,20 @@ module Rails
           verb: "PUT",
           path: "/api/cakes/inherit(.:format)",
           name: "inherit"
+      routes.push \
+        mock_route \
+          controller: "api/cakes",
+          action: "index",
+          verb: "GET",
+          path: "/api/cakes(.:format)",
+          name: "cakes"
+      routes.push \
+        mock_route \
+          controller: "api/croissants",
+          action: "index",
+          verb: "GET",
+          path: "/api/croissants(.:format)",
+          name: "croissants"
       routes.push \
         mock_route \
           controller: "api/tacos",
