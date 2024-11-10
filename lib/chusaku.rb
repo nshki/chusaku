@@ -29,14 +29,7 @@ module Chusaku
         .new(Rails.root.join(controllers_pattern))
         .exclude(Rails.root.join(exclusion_pattern))
 
-      @routes.each do |controller, actions|
-        next unless controller
-
-        controller_class = "#{controller.underscore.camelize}Controller".constantize
-        action_method_name = actions.keys.first&.to_sym
-        next unless !action_method_name.nil? && controller_class.method_defined?(action_method_name)
-
-        source_path = controller_class.instance_method(action_method_name).source_location&.[](0)
+      source_paths_map.each do |source_path, actions|
         next unless controllers_paths.include?(source_path)
 
         annotate_file(path: source_path, actions: actions)
@@ -55,6 +48,34 @@ module Chusaku
     end
 
     private
+
+    # Maps source paths to their respective routes.
+    #
+    # Example output:
+    #
+    #   {
+    #     "/path/to/users_controller.rb" => {
+    #       "edit" => [...],
+    #       "update" => [...]
+    #     }
+    #   }
+    #
+    # @return [Hash] Source paths mapped to their respective routes
+    def source_paths_map
+      map = {}
+
+      @routes.each do |controller, actions|
+        actions.each do |action, data|
+          data.each do |datum|
+            map[datum[:source_path]] ||= {}
+            map[datum[:source_path]][action] ||= []
+            map[datum[:source_path]][action].push(datum)
+          end
+        end
+      end
+
+      map
+    end
 
     # Adds annotations to the given file.
     #
@@ -110,8 +131,9 @@ module Chusaku
     # @param path [String] Rails path for route
     # @param name [String] Name used in route helpers
     # @param defaults [Hash] Default parameters for route
+    # @param source_path [String] Path to controller file
     # @return [String] "@route <verb> <path> {<defaults>} (<name>)"
-    def annotate_route(verb:, path:, name:, defaults:)
+    def annotate_route(verb:, path:, name:, defaults:, source_path:)
       annotation = "@route #{verb} #{path}"
       if defaults&.any?
         defaults_str =

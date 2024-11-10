@@ -9,16 +9,40 @@ module Chusaku
       #   {
       #     "users" => {
       #       "edit" => [
-      #         {verb: "GET", path: "/users/:id", name: "edit_user"}
+      #         {
+      #           verb: "GET",
+      #           path: "/users/:id",
+      #           name: "edit_user",
+      #           defaults: {},
+      #           source_path: "/path/to/users_controller.rb"
+      #         }
       #       ],
       #       "update" => [
-      #         {verb: "PATCH", path: "/users", name: "edit_user"},
-      #         {verb: "PUT", path: "/users", name: "edit_user"}
+      #         {
+      #           verb: "PATCH",
+      #           path: "/users",
+      #           name: "edit_user",
+      #           defaults: {},
+      #           source_path: "/path/to/users_controller.rb"
+      #         },
+      #         {
+      #           verb: "PUT",
+      #           path: "/users",
+      #           name: "edit_user",
+      #           defaults: {},
+      #           source_path: "/path/to/users_controller.rb"
+      #         }
       #       ]
       #     },
       #     "empanadas" => {
       #       "create" => [
-      #         {verb: "POST", path: "/empanadas", name: nil}
+      #         {
+      #           verb: "POST",
+      #           path: "/empanadas",
+      #           name: nil,
+      #           defaults: {},
+      #           source_path: "/path/to/empanadas_controller.rb"
+      #         }
       #       ]
       #     }
       #   }
@@ -33,6 +57,12 @@ module Chusaku
 
       private
 
+      # Recursively populate the routes hash with information from the given Rails
+      # application. Accounts for Rails engines.
+      #
+      # @param app [Rails::Application] Result of `Rails.application`
+      # @param routes [Hash] Collection of all route info
+      # @return [void]
       def populate_routes(app, routes)
         app.routes.routes.each do |route|
           if route.app.engine?
@@ -40,7 +70,7 @@ module Chusaku
             next
           end
 
-          controller, action, defaults = extract_data_from(route)
+          controller, action, defaults, source_path = extract_data_from(route)
           routes[controller] ||= {}
           routes[controller][action] ||= []
 
@@ -49,7 +79,8 @@ module Chusaku
             routes: routes,
             controller: controller,
             action: action,
-            defaults: defaults
+            defaults: defaults,
+            source_path: source_path
         end
       end
 
@@ -60,11 +91,17 @@ module Chusaku
       # @param controller [String] Controller key
       # @param action [String] Action key
       # @param defaults [Hash] Default parameters for route
+      # @param source_path [String] Path to controller file
       # @return [void]
-      def add_info_for(route:, routes:, controller:, action:, defaults:)
+      def add_info_for(route:, routes:, controller:, action:, defaults:, source_path:)
         verbs_for(route).each do |verb|
-          routes[controller][action]
-            .push(format(route: route, verb: verb, defaults: defaults))
+          routes[controller][action].push \
+            format(
+              route: route,
+              verb: verb,
+              defaults: defaults,
+              source_path: source_path
+            )
           routes[controller][action].uniq!
         end
       end
@@ -88,13 +125,15 @@ module Chusaku
       # @param route [ActionDispatch::Journey::Route] Route given by Rails
       # @param verb [String] HTTP verb
       # @param defaults [Hash] Default parameters for route
+      # @param source_path [String] Path to controller file
       # @return [Hash] { verb => String, path => String, name => String }
-      def format(route:, verb:, defaults:)
+      def format(route:, verb:, defaults:, source_path:)
         {
           verb: verb,
           path: route.path.spec.to_s.gsub("(.:format)", ""),
           name: route.name,
-          defaults: defaults
+          defaults: defaults,
+          source_path: source_path
         }
       end
 
@@ -143,16 +182,26 @@ module Chusaku
         routes
       end
 
-      # Given a route, extract the controller and action strings.
+      # Given a route, extract the controller & action strings as well as defaults
+      # hash and source path.
       #
       # @param route [ActionDispatch::Journey::Route] Route instance
-      # @return [Array<Object>] (String, String, Hash)
+      # @return [Array<Object>] (String, String, Hash, String)
       def extract_data_from(route)
         defaults = route.defaults.dup
         controller = defaults.delete(:controller)
         action = defaults.delete(:action)
 
-        [controller, action, defaults]
+        controller_class = "#{controller.underscore.camelize}Controller".constantize
+        action_method_name = action.to_sym
+        source_path =
+          if !action_method_name.nil? && controller_class.method_defined?(action_method_name)
+            controller_class.instance_method(action_method_name).source_location&.[](0)
+          else
+            ""
+          end
+
+        [controller, action, defaults, source_path]
       end
     end
   end
