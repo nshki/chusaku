@@ -23,8 +23,7 @@ Gem::Specification.new do |spec|
     spec.metadata["source_code_uri"] = spec.homepage
     spec.metadata["changelog_uri"] = spec.homepage
   else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-          "public gem pushes."
+    raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
   end
 
   # Specify which files should be added to the gem when it is released.
@@ -39,10 +38,10 @@ Gem::Specification.new do |spec|
   spec.executables = "chusaku"
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 2.2"
-  spec.add_development_dependency "minitest", "~> 5.14"
-  spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "standardrb", "~> 1.0"
+  spec.add_development_dependency "bundler", "~> 2.6"
+  spec.add_development_dependency "minitest", "~> 5.25"
+  spec.add_development_dependency "rake", "~> 13.2"
+  spec.add_development_dependency "standard", "~> 1.31"
 
   spec.add_dependency "railties", ">= 3.0"
 end
