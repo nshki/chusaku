@@ -1,3 +1,5 @@
+require "active_support/inflector"
+
 module Chusaku
   # Handles extracting information about the Rails project's routes.
   class Routes
@@ -192,7 +194,8 @@ module Chusaku
         controller = defaults.delete(:controller)
         action = defaults.delete(:action)
 
-        controller_class = controller ? "#{controller.underscore.camelize}Controller".constantize : nil
+        controller_name = ActiveSupport::Inflector.camelize(ActiveSupport::Inflector.underscore(controller))
+        controller_class = controller ? ActiveSupport::Inflector.constantize("#{controller_name}Controller") : nil
         action_method_name = action&.to_sym
         source_path =
           if !action_method_name.nil? && controller_class&.method_defined?(action_method_name)
