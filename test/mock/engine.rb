@@ -5,7 +5,6 @@
 #
 # The mocks used should reflect the files located in `test/mock/app/`.
 
-require "pathname"
 require_relative "route_helper"
 require_relative "engine/app/controllers/engine_controller"
 require_relative "engine/app/controllers/cars_controller"

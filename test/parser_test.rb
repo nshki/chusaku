@@ -9,16 +9,16 @@ describe "Chusaku::Parser" do
     assert_equal(4, result[:groups].size)
     assert_equal \
       %i[code comment action code],
-      (result[:groups].map { |r| r[:type] })
+      result[:groups].map { |r| r[:type] }
     assert_equal \
       File.read("#{__dir__}/mock/examples/example.rb"),
       result[:groups].map { |r| r[:body] }.join
     assert_equal \
       [nil, nil, "foo", nil],
-      (result[:groups].map { |r| r[:action] })
+      result[:groups].map { |r| r[:action] }
     assert_equal \
       [1, 2, 4, 5],
-      (result[:groups].map { |r| r[:line_number] })
+      result[:groups].map { |r| r[:line_number] }
   end
 
   it "parses empty file properly" do

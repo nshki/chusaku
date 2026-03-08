@@ -188,7 +188,7 @@ module Chusaku
     #
     # @return [String] 'r' or 'w'
     def file_mode
-      File.instance_methods.include?(:test_write) ? "r" : "w"
+      File.method_defined?(:test_write) ? "r" : "w"
     end
 
     # Output results to user.
