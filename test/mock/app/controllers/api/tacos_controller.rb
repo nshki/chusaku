@@ -12,6 +12,7 @@ module Api
 
     # Update all the tacos!
     # @route this should be deleted, it's not a valid route.
+    # Route:: this should also be deleted, it's a stale RDoc annotation.
     # We should not see a duplicate @route in this comment block.
     # @route PUT /api/tacos/:id (taco)
     # But this should remain (@route), because it's just words.

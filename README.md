@@ -17,6 +17,21 @@ def update
 end
 ```
 
+With `--format=rdoc`:
+
+```ruby
+# Route:: GET /waterlilies/:id (waterlily)
+def show
+  # ...
+end
+
+# Route:: PATCH /waterlilies/:id (waterlily)
+# Route:: PUT /waterlilies/:id (waterlily)
+def update
+  # ...
+end
+```
+
 Based on your `routes.rb` file!
 
 
@@ -54,6 +69,7 @@ Usage: chusaku [options]
         --exit-with-error-on-annotation Fail if any file was annotated
     -c, --controllers-pattern=GLOB      Specify alternative controller files glob pattern
     -e, --exclusion-pattern=GLOB        Specify controller files exclusion glob pattern
+    -f, --format=FORMAT                 Annotation style: yard (default) or rdoc
         --verbose                       Print all annotated files
     -v, --version                       Show Chusaku version number and quit
     -h, --help                          Show this help message and quit

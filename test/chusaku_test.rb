@@ -180,4 +180,68 @@ describe "Chusaku" do
     assert_equal(4, File.written_files.count)
     assert_equal("Chusaku has finished running.\n", out)
   end
+
+  it "annotates with RDoc format when `format: :rdoc` is passed" do
+    exit_code = 0
+
+    capture_io { exit_code = Chusaku.call(format: :rdoc) }
+    files = File.written_files
+    app_path = "#{Rails.root}/app/controllers"
+
+    assert_equal(0, exit_code)
+
+    expected =
+      <<~HEREDOC
+        class WaterliliesController < ApplicationController
+          # Route:: GET /waterlilies/:id (waterlilies)
+          # Route:: GET /waterlilies/:id (waterlilies2)
+          # Route:: GET /waterlilies/:id {blue: true} (waterlilies_blue)
+          def show
+          end
+
+          # Route:: GET /one-off
+          def one_off
+          end
+        end
+      HEREDOC
+    assert_equal(expected, files["#{app_path}/waterlilies_controller.rb"])
+
+    expected =
+      <<~HEREDOC
+        module Api
+          class TacosController < ApplicationController
+            # Route:: GET / (root)
+            # Route:: GET /api/tacos/:id (taco)
+            def show
+            end
+
+            # This is an example of generated annotations that come with Rails 6
+            # scaffolds. These should be replaced by Chusaku annotations.
+            # Route:: POST /api/tacos (tacos)
+            def create
+            end
+
+            # Update all the tacos!
+            # We should not see a duplicate @route in this comment block.
+            # But this should remain (@route), because it's just words.
+            # Route:: PUT /api/tacos/:id (taco)
+            # Route:: PATCH /api/tacos/:id (taco)
+            def update
+            end
+
+            # This route doesn't exist, so it should be deleted.
+            def destroy
+              puts("Tacos are indestructible")
+            end
+
+            private
+
+            def tacos_params
+              params.require(:tacos).permit(:carnitas)
+            end
+          end
+        end
+      HEREDOC
+    assert_equal(expected, files["#{app_path}/api/tacos_controller.rb"])
+  end
 end

@@ -116,4 +116,42 @@ describe "Chusaku::CLI" do
       assert_equal({exclusion_pattern: "**/*_not_controller.rb"}, cli.options)
     end
   end
+
+  it "implements a format flag" do
+    # --format=rdoc
+    cli = Chusaku::CLI.new
+    cli.stub(:check_for_rails_project, nil) do
+      capture_io do
+        assert_equal(0, cli.call(["--format=rdoc"]))
+      end
+      assert_equal({format: :rdoc}, cli.options)
+    end
+
+    # -f rdoc
+    cli = Chusaku::CLI.new
+    cli.stub(:check_for_rails_project, nil) do
+      capture_io do
+        assert_equal(0, cli.call(["-f", "rdoc"]))
+      end
+      assert_equal({format: :rdoc}, cli.options)
+    end
+
+    # --format=yard
+    cli = Chusaku::CLI.new
+    cli.stub(:check_for_rails_project, nil) do
+      capture_io do
+        assert_equal(0, cli.call(["--format=yard"]))
+      end
+      assert_equal({format: :yard}, cli.options)
+    end
+  end
+
+  it "rejects an unknown format value" do
+    cli = Chusaku::CLI.new
+    cli.stub(:check_for_rails_project, nil) do
+      assert_raises(OptionParser::InvalidArgument) do
+        cli.call(["--format=bogus"])
+      end
+    end
+  end
 end

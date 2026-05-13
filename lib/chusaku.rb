@@ -105,6 +105,7 @@ module Chusaku
       return unless group[:type] == :comment
 
       group[:body] = group[:body].gsub(/^\s*#\s*@route.*$\n/, "")
+      group[:body] = group[:body].gsub(/^\s*#\s*Route::.*$\n/, "")
       group[:body] =
         group[:body].gsub(%r{^\s*# (GET|POST|PATCH/PUT|DELETE) /\S+$\n}, "")
     end
@@ -134,7 +135,8 @@ module Chusaku
     # @param source_path [String] Path to controller file
     # @return [String] "@route <verb> <path> {<defaults>} (<name>)"
     def annotate_route(verb:, path:, name:, defaults:, source_path:)
-      annotation = "@route #{verb} #{path}"
+      prefix = (@flags[:format] == :rdoc) ? "Route::" : "@route"
+      annotation = "#{prefix} #{verb} #{path}"
       if defaults&.any?
         defaults_str =
           defaults

@@ -58,6 +58,7 @@ module Chusaku
         add_error_on_annotation_flag(opts)
         add_controllers_pattern_flag(opts)
         add_exclusion_pattern_flag(opts)
+        add_format_flag(opts)
         add_verbose_flag(opts)
         add_version_flag(opts)
         add_help_flag(opts)
@@ -101,6 +102,16 @@ module Chusaku
     def add_exclusion_pattern_flag(opts)
       opts.on("-e", "--exclusion-pattern", "=GLOB", "Specify controller files exclusion glob pattern") do |value|
         @options[:exclusion_pattern] = value
+      end
+    end
+
+    # Adds `--format` flag.
+    #
+    # @param opts [OptionParser] OptionParser instance
+    # @return [void]
+    def add_format_flag(opts)
+      opts.on("-f", "--format=FORMAT", %w[yard rdoc], "Annotation style: yard (default) or rdoc") do |value|
+        @options[:format] = value.to_sym
       end
     end
 
