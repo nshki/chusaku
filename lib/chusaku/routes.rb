@@ -60,14 +60,14 @@ module Chusaku
       private
 
       # Recursively populate the routes hash with information from the given Rails
-      # application. Accounts for Rails engines.
+      # application. Accounts for engines in Rails versions >= 5.2.
       #
       # @param app [Rails::Application] Result of `Rails.application`
       # @param routes [Hash] Collection of all route info
       # @return [void]
       def populate_routes(app, routes)
         app.routes.routes.each do |route|
-          if route.app.engine?
+          if route.app.respond_to?(:engine?) && route.app.engine?
             populate_routes(route.app.app, routes)
             next
           end
