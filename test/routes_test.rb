@@ -147,4 +147,20 @@ describe "Chusaku::Routes" do
 
     assert_equal(expected, result)
   end
+
+  it "parses routes correctly in Rails versions without engines" do
+    route = Rails.mock_route \
+      controller: "api/burritos",
+      action: "create",
+      verb: "POST",
+      path: "/api/burritos(.:format)",
+      name: "burritos",
+      engines: false
+    app = Rails.mock_app(routes: [route])
+
+    Rails.stub(:application, app) do
+      result = Chusaku::Routes.call
+      assert_equal("POST", result.dig("api/burritos", "create", 0, :verb))
+    end
+  end
 end

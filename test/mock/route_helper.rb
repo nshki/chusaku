@@ -7,6 +7,18 @@ module RouteHelper
     @@route_allowlist = route_allowlist
   end
 
+  # Builds a mock `Rails.application`.
+  #
+  # @param routes [Array<Minitest::Mock>] Routes to include
+  # @return [Minitest::Mock] Mocked application
+  def mock_app(routes:)
+    mock_routes = Minitest::Mock.new
+    mock_routes.expect(:routes, routes.compact)
+    app = Minitest::Mock.new
+    app.expect(:routes, mock_routes)
+    app
+  end
+
   # Stored procedure for mocking a new route.
   #
   # @param controller [String] Mocked controller name
@@ -14,19 +26,20 @@ module RouteHelper
   # @param verb [String] HTTP verb
   # @param path [String] Mocked Rails path
   # @param name [String] Mocked route name
+  # @param engines [Boolean] Whether engines are mocked or not
   # @param defaults [Hash] Mocked default params
   # @return [Minitest::Mock, nil] Mocked route
-  def mock_route(controller:, action:, verb:, path:, name:, defaults: {})
+  def mock_route(controller:, action:, verb:, path:, name:, engines: true, defaults: {})
     @@route_allowlist ||= []
     return if @@route_allowlist.any? && @@route_allowlist.index("#{controller}##{action}").nil?
 
     app = Minitest::Mock.new
-    app.expect(:engine?, false)
+    app.expect(:engine?, false) if engines
 
     route = Minitest::Mock.new
     route.expect(:defaults, {controller: controller, action: action, **defaults})
     route.expect(:verb, verb)
-    route.expect(:app, app)
+    2.times { route.expect(:app, app) } # Accessed twice in `Chusaku::Routes.populate_routes`
     route_path = Minitest::Mock.new
 
     # We'll be calling these particular methods more than once to test for
@@ -50,7 +63,7 @@ module RouteHelper
 
     # We'll be calling these particular methods more than once to test for
     # duplicate-removal, hence wrapping in `.times` block.
-    2.times do
+    3.times do
       route.expect(:app, engine)
     end
 
