@@ -28,11 +28,7 @@ module Engine
           path: "/engine/cars(.:format)",
           name: "car"
 
-      engine_app = Minitest::Mock.new
-      app_routes = Minitest::Mock.new
-      app_routes.expect(:routes, routes.compact)
-      engine_app.expect(:routes, app_routes)
-      engine_app
+      mock_app(routes:)
     end
 
     # Lets us call `Engine.engine?` without a skeleton Rails app.

@@ -131,11 +131,7 @@ module Rails
           engine: Engine,
           path: "/engine"
 
-      app = Minitest::Mock.new
-      app_routes = Minitest::Mock.new
-      app_routes.expect(:routes, routes.compact)
-      app.expect(:routes, app_routes)
-      app
+      mock_app(routes:)
     end
 
     # Lets us call `Rails.root` without a skeleton Rails app.
