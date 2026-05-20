@@ -130,6 +130,17 @@ describe "Chusaku::Routes" do
             }
           ]
         },
+        "non_existent" => {
+          "non_existent" => [
+            {
+              verb: "POST",
+              path: "/non-existent",
+              name: nil,
+              defaults: {},
+              source_path: ""
+            }
+          ]
+        },
         "cars" => {
           "create" => [
             {

@@ -127,6 +127,13 @@ module Rails
           path: "/one-off",
           name: nil
       routes.push \
+        mock_route \
+          controller: "non_existent",
+          action: "non_existent",
+          verb: "POST",
+          path: "/non-existent",
+          name: nil
+      routes.push \
         mock_engine \
           engine: Engine,
           path: "/engine"
