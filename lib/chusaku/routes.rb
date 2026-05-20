@@ -195,7 +195,12 @@ module Chusaku
         action = defaults.delete(:action)
 
         controller_name = ActiveSupport::Inflector.camelize(ActiveSupport::Inflector.underscore(controller))
-        controller_class = controller ? ActiveSupport::Inflector.constantize("#{controller_name}Controller") : nil
+        controller_class =
+          begin
+            controller ? ActiveSupport::Inflector.constantize("#{controller_name}Controller") : nil
+          rescue NameError
+            nil
+          end
         action_method_name = action&.to_sym
         source_path =
           if !action_method_name.nil? && controller_class&.method_defined?(action_method_name)
